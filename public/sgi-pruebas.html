@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario | SGI - Menú Lateral</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <style>
+        :root {
+            --color-primary: #1a73e8; /* Azul Google */
+            --color-secondary: #0f9d58; /* Verde Google */
+            --color-bg: #f8f9fa; /* Fondo claro */
+            --color-red: #ea4335; /* Rojo Google */
+            --color-yellow: #fbbc04; /* Amarillo Google */
+            --color-sidebar-bg: #ffffff; /* Fondo del menú */
+            --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+            --shadow-deep: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--color-bg);
+            margin: 0;
+            overflow-x: hidden;
+            color: #333;
+        }
+
+        /* Estilo para los Iconos de Google */
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            color: var(--color-primary);
+        }
+
+        /* --- Transición de Pantalla Completa --- */
+        .full-screen-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 3000;
+            background-color: #ffffff;
+            opacity: 1;
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+
+        .hidden-section {
+            opacity: 0 !important;
+            visibility: hidden;
+            transform: translateY(-100%);
+        }
+
+        #bienvenida h1 {
+            font-size: 4em;
+            color: var(--color-primary);
+            animation: bounceIn 1s forwards;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .login-card {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-deep);
+            width: 90%;
+            max-width: 350px;
+            text-align: center;
+        }
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group input, .input-group select { width: 100%; padding: 12px; border: 1px solid #dadce0; border-radius: 6px; box-sizing: border-box; }
+        .login-btn, .btn-submit {
+            background-color: var(--color-primary);
+            color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; width: 100%;
+            font-size: 1.1em; transition: background-color 0.3s;
+        }
+        .login-btn:hover, .btn-submit:hover { background-color: #1558b0; }
+
+        /* --- NUEVO LAYOUT DE MENÚ LATERAL --- */
+        #main-layout {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            display: none; /* Se muestra después del login */
+        }
+
+        /* Menú Lateral Izquierdo */
+        #sidebar {
+            width: 250px;
+            background-color: var(--color-sidebar-bg);
+            box-shadow: var(--shadow-deep);
+            padding: 20px 0;
+            flex-shrink: 0;
+        }
+        #sidebar h2 {
+            padding: 0 20px;
+            color: var(--color-primary);
+            font-size: 1.5em;
+            margin-bottom: 25px;
+        }
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .sidebar-item:hover, .sidebar-item.active {
+            background-color: var(--color-primary);
+            color: white;
+        }
+        .sidebar-item:hover .material-symbols-outlined, .sidebar-item.active .material-symbols-outlined {
+            color: white;
+        }
+        .sidebar-item .material-symbols-outlined {
+            margin-right: 15px;
+            font-size: 1.5em;
+        }
+
+        /* Estilo para el selector de Inventario Activo */
+        #inventory-selector-container {
+            padding: 10px 20px;
+            border-top: 1px solid #eee;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+        #inventory-selector-container label {
+            font-size: 0.9em;
+            color: #555;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* Área de Contenido Derecha */
+        #content-area {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: var(--color-bg);
+        }
+
+        /* Encabezado y Botón de Salida */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+        .btn-delete {
+            background-color: var(--color-red);
+            color: white;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+        .btn-delete:hover { background-color: #b0150d; }
+
+
+        /* Contenedor Interior con Límite (El "Recuadro Grande") */
+        #content-wrapper {
+            max-width: 1000px; /* Límite máximo para el contenido */
+            margin: 0 auto; /* Centrar el contenido en el área derecha */
+            padding: 30px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: var(--shadow-deep);
+        }
+
+        .form-content {
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+            background-color: #f1f3f4; /* Fondo ligero para formularios */
+        }
+        .form-content h3 { color: var(--color-primary); }
+
+        /* --- Estilos de la PÁGINA DE INICIO (HOME) --- */
+        #home-content {
+            display: block; /* Visible por defecto al entrar al layout */
+            background-color: #ffffff;
+            padding: 0;
+        }
+
+        .home-card {
+            padding: 30px;
+            border-radius: 12px;
+            border-left: 5px solid var(--color-secondary);
+            margin-bottom: 20px;
+            background-color: #f7fcf9;
+            box-shadow: var(--shadow-light);
+        }
+        .home-card h4 { color: var(--color-secondary); }
+        .home-card h5 { margin-top: 0; color: #333; }
+
+        /* Estilos específicos para el tutorial */
+        .tutorial-card-primary { border-left-color: var(--color-primary) !important; }
+        .tutorial-card-secondary { border-left-color: var(--color-secondary) !important; }
+        .tutorial-card-yellow { border-left-color: var(--color-yellow) !important; }
+
+        /* --- Estilos para la tabla e inputs (se mantienen) --- */
+        .data-table {
+            width: 100%; border-collapse: collapse; margin-top: 15px; background: white;
+            box-shadow: var(--shadow-light);
+        }
+        .data-table th, .data-table td {
+            padding: 12px 15px; border-bottom: 1px solid #e0e0e0; text-align: left;
+        }
+        .data-table th { background-color: var(--color-primary); color: white; }
+        .data-table tr:hover { background-color: #f0f0f0; }
+        .form-group { margin-bottom: 15px; display: flex; align-items: center; }
+        .form-group label { width: 100px; font-weight: bold; }
+        .form-group input, .form-group textarea { flex-grow: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        .stock-bajo { font-weight: bold; color: var(--color-red); }
+    </style>
+</head>
+<body>
+
+<section id="bienvenida" class="full-screen-section">
+    <h1> Bienvenidos al SGI </h1>
+</section>
+
+<section id="login-section" class="full-screen-section" style="background-color: var(--color-bg); opacity: 0; visibility: hidden; transition: opacity 0.5s;">
+    <div class="login-card">
+        <h2>LOGIN</h2>
+        <form id="login-form">
+            <div class="input-group"><input type="text" id="username" placeholder="Usuario" required></div>
+            <div class="input-group"><input type="password" id="password" placeholder="Contraseña" required></div>
+            <button type="submit" class="login-btn">Acceder</button>
+            <p style="margin-top: 15px; color: #555;">Demo: admin / 123</p>
+        </form>
+    </div>
+</section>
+
+<div id="main-layout">
+
+    <nav id="sidebar">
+        <h2>SGI | Inventario</h2>
+
+        <div id="inventory-selector-container">
+            <label for="inventory-selector">Inventario Activo:</label>
+            <select id="inventory-selector" onchange="changeActiveInventory(this.value)">
+            </select>
+        </div>
+
+        <a class="sidebar-item active" href="#" onclick="mostrarSeccion('home', this)">
+            <span class="material-symbols-outlined">home</span>
+            Inicio
+        </a>
+        <a class="sidebar-item" href="#" onclick="mostrarSeccion('inventario', this)">
+            <span class="material-symbols-outlined">inventory</span>
+            Ver Inventario
+        </a>
+
+        <a class="sidebar-item" href="#" onclick="mostrarSeccion('valoracion', this)">
+            <span class="material-symbols-outlined">calculate</span>
+            Valoración Total
+        </a>
+
+        <a class="sidebar-item" href="#" onclick="mostrarSeccion('nuevo-inventario', this)">
+            <span class="material-symbols-outlined">add_to_photos</span>
+            Crear Nuevo Inventario
+        </a>
+
+        <a class="sidebar-item" href="#" onclick="mostrarSeccion('agregar', this)">
+            <span class="material-symbols-outlined">add_box</span>
+            Añadir Producto
+        </a>
+        <a class="sidebar-item" href="#" onclick="mostrarSeccion('acerca', this)">
+            <span class="material-symbols-outlined">info</span>
+            Acerca de
+        </a>
+
+    </nav>
+
+    <div id="content-area">
+        <header>
+            <h2 id="current-title" style="margin: 0; color: #555;">Página Principal</h2>
+            <button onclick="logout()" class="btn-delete">Cerrar Sesión</button>
+        </header>
+
+        <div id="content-wrapper">
+
+            <div id="home-content" class="form-content" style="display:block;">
+                <h3 style="color: var(--color-primary);"> Sistema de Gestión Inteligente de Inventario (SGI)</h3>
+                <p>El SGI es una plataforma web esencial diseñada para optimizar la **administración y el control en tiempo real** de su stock de productos. Permite una gestión rápida y precisa, desde la creación de un artículo hasta la valoración financiera completa del patrimonio.</p>
+
+                <div class="home-card">
+                    <h4>Funcionalidades Clave del SGI</h4>
+                    <ul>
+                        <li>Control CRUD:Crea, edita, busca y elimina productos.</li>
+                        <li>Múltiples Inventarios Gestione varios stocks separados (e.g., por bodega o tienda).</li>
+                        <li>Alerta de Stock:Identifica inmediatamente los productos con existencias bajas (&lt; 10 unidades).</li>
+                        <li>Valoración Financiera:Calcula el valor total de su inventario en Pesos Colombianos (COP).</li>
+                        <li>Interfaz Intuitiva:** Diseño moderno y fácil de usar, inspirado en la estética de Google.</li>
+                    </ul>
+                </div>
+
+                <h3 style="color: var(--color-secondary); margin-top: 30px;">⚙️ Guía Rápida de Uso (Mini-Tutorial)</h3>
+
+                <div style="display: flex; flex-direction: column; gap: 15px;">
+
+                    <div class="home-card tutorial-card-primary">
+                        <h5>1. Ver Inventario</h5>
+                        <p>Al seleccionar esta opción, se cargará la tabla completa de productos del inventario activo.
+                            Use el buscador para filtrar por ID o nombre. Si hace doble clic en cualquier fila,
+                            podrá modificar la cantidad o eliminar el producto.</p>
+                    </div>
+
+                    <div class="home-card tutorial-card-secondary">
+                        <h5>2. Valoración Total</h5>
+                        <p>Esta es la herramienta financiera. Automáticamente calcula la sumatoria del valor total de todos los productos
+                            en stock del inventario activo (`Cantidad * Precio`) y muestra el número total de artículos únicos.</p>
+                    </div>
+
+                    <div class="home-card tutorial-card-yellow">
+                        <h5>3. Crear Nuevo Inventario</h5>
+                        <p>Permite iniciar una nueva base de datos de stock. Puede asignarle un Nombre
+                            (e.g., 'Bodega Norte') y definir lasCategorías
+                            principales que utilizará para la clasificación de los productos.</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="inventario-content" class="form-content">
+                <h3>Inventario Actual (<span id="active-inventory-name">Inventario Principal</span>)</h3>
+                <div style="margin-bottom: 15px;">
+                    <input type="text" id="search-input" placeholder="Buscar por ID, Nombre, Detalle o Categoría..." style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+                </div>
+
+                <table class="data-table" id="tabla-inventario">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Detalle</th>
+                        <th>Cantidad</th>
+                        <th>Precio (COP)</th>
+                        <th>Categoría</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div id="valoracion-content" class="form-content">
+                <h3 style="color: var(--color-secondary);"> Resumen de Valoración del Inventario</h3>
+                <p>Esta sección muestra la cantidad total de artículos únicos en stock y el valor monetario total del inventario.</p>
+
+                <div id="valoracion-results" style="padding: 20px; border: 1px solid #ccc; border-radius: 8px; background-color: #f7f7f7; margin-top: 20px;">
+                    <div style="margin-bottom: 15px;">
+                        <h4>Productos Únicos Disponibles (<span id="active-inventory-name-val">Inventario Principal</span>):</h4>
+                        <p id="total-productos" style="font-size: 2em; color: var(--color-primary); font-weight: bold;">Cargando...</p>
+                    </div>
+
+                    <div>
+                        <h4>Valor Total del Inventario (COP):</h4>
+                        <p id="valor-total" style="font-size: 2.5em; color: var(--color-secondary); font-weight: 700;">Cargando...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="nuevo-inventario-content" class="form-content">
+                <h3>Crear Nuevo Inventario</h3>
+                <form id="form-nuevo-inventario">
+                    <p>Defina la configuración de su nuevo inventario.</p>
+                    <div class="form-group"><label>Nombre:</label><input id="new-inventory-name" placeholder="Ej: Inventario Bodega Principal" required></div>
+                    <div class="form-group"><label>Categorías:</label><textarea id="new-inventory-categories" placeholder="Separe las categorías por coma (Ej: Tecnología, Ropa, Hogar)" required></textarea></div>
+                    <button class="btn-submit" type="submit" style="margin-top: 20px;">Crear y Activar Inventario</button>
+                </form>
+            </div>
+
+
+            <div id="agregar-content" class="form-content">
+                <h3>Agregar Producto al Inventario (<span id="add-inventory-name">Inventario Principal</span>)</h3>
+                <form id="form-agregar">
+                    <div class="form-group"><label>ID:</label><input id="add-id" placeholder="Ej: TEL-001" required></div>
+                    <div class="form-group"><label>Nombre:</label><input id="add-nombre" placeholder="Nombre completo del producto" required></div>
+                    <div class="form-group"><label>Detalle:</label><input id="add-detalle" placeholder="Ej: Talla M / Rojo, 512GB / Gris" required></div>
+                    <div class="form-group"><label>Categoría:</label><input id="add-categoria" placeholder="Ej: Tecnología, Ropa" required></div>
+                    <div class="form-group"><label>Cantidad:</label><input type="number" id="add-cantidad" min="1" value="1" required></div>
+                    <div class="form-group"><label>Precio:</label><input type="number" id="add-precio" min="0" placeholder="Precio en COP (Ej: 1500000)" required></div>
+                    <button class="btn-submit" type="submit" style="margin-top: 20px;">Guardar Producto</button>
+                </form>
+            </div>
+
+            <div id="acerca-content" class="form-content">
+                <h3>Acerca de SGI</h3>
+                <p><strong>Desarrolladores:</strong></p>
+                <ul>
+                    <li>Brayan Piraneque — **Scrum Master**</li>
+                    <li>Cristian Quiroga — **Product Owner**</li>
+                    <li>Alejandro Jaimes — **Developer Team**</li>
+                </ul>
+                <p><strong>Versión:</strong> 1.0</p>
+                <p><strong>Eslogan:</strong> "Organizamos inventarios, construimos eficiencia"</p>
+            </div>
+
+        </div> </div> </div> <div id="edit-modal" style="display:none; position:fixed; z-index:4000; left:0; top:0; width:100%; height:100%; overflow:auto; background-color:rgba(0,0,0,0.4);">
+    <div class="modal-content" style="background-color:#fefefe; margin:15% auto; padding:20px; border:1px solid #888; width:90%; max-width:400px; border-radius:10px; box-shadow:var(--shadow-deep);">
+        <span class="close-btn" onclick="document.getElementById('edit-modal').style.display='none';" style="color:#aaa; float:right; font-size:28px; font-weight:bold; cursor:pointer;">&times;</span>
+        <h3 id="modal-product-name" style="color:var(--color-primary);">Detalles del Producto</h3>
+        <p>ID: <strong id="modal-product-id"></strong></p>
+        <p>Detalle: <strong id="modal-product-detail"></strong></p>
+
+        <div style="border-top: 1px solid #eee; padding-top: 15px; margin-top: 15px;">
+            <h4>Modificar Cantidad</h4>
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                <button id="btn-decrement" class="btn-table btn-delete" style="font-size:1.5em; flex-basis: 50px;">-</button>
+                <input type="number" id="modal-quantity-input" min="0" style="width: 100%; padding: 10px; text-align: center; border: 1px solid #ccc;">
+                <button id="btn-increment" class="btn-table btn-stock" style="font-size:1.5em; flex-basis: 50px; background-color: var(--color-secondary);">+</button>
+            </div>
+            <button id="btn-save-quantity" class="btn-submit" style="margin-top: 15px; background-color: var(--color-secondary);">Guardar Cantidad</button>
+        </div>
+
+        <button id="btn-delete-product" class="btn-delete" style="margin-top: 25px; width:100%;">Eliminar Producto</button>
+    </div>
+</div>
+
+
+<script>
+    const VALID_USER = 'admin';
+    const VALID_PASS = '123';
+    const STOCK_WARNING_LEVEL = 10;
+    const INVENTORY_STORAGE_KEY = 'sgi_multiple_inventarios';
+    const ACTIVE_INVENTORY_KEY = 'sgi_inventario_activo';
+    const PRODUCT_COUNT_TARGET = 100; // Objetivo de productos iniciales
+
+    // Estructura de almacenamiento de múltiples inventarios:
+    // {
+    //   'Inventario Principal': {
+    //      name: 'Inventario Principal',
+    //      categories: ['Tecnología', 'Ropa', 'Hogar'],
+    //      products: [...]
+    //   },
+    //   'Bodega Norte': { ... }
+    // }
+    let globalInventories = {};
+    let activeInventoryId = 'Inventario Principal'; // ID del inventario actualmente visible
+
+    // --- Funciones de Generación de Datos Realistas ---
+    function generateInitialData(count) {
+        const categories = ['Tecnología', 'Ropa', 'Hogar'];
+        const prefixes = { 'Tecnología': 'TEC', 'Ropa': 'ROP', 'Hogar': 'HOG' };
+        const sizes = ['S', 'M', 'L', 'XL'];
+        const colors = ['Rojo', 'Azul', 'Blanco', 'Negro', 'Gris', 'Verde'];
+
+        const techModels = [
+            { name: 'Laptop HP Pavilion', details: ['i5 / 8GB RAM / 512GB SSD', 'i7 / 16GB RAM / 1TB SSD'], priceBase: 2500000 },
+            { name: 'Monitor Samsung Curvo', details: ['27 Pulgadas / 144hz', '32 Pulgadas / 60hz'], priceBase: 1200000 },
+            { name: 'Consola PS5', details: ['Digital Edition', 'Disco Edition'], priceBase: 3500000 },
+            { name: 'Smartphone Xiaomi 13T', details: ['128GB', '256GB'], priceBase: 1800000 }
+        ];
+
+        const apparelModels = [
+            { name: 'Jean Diesel Slim', priceBase: 150000 },
+            { name: 'Camiseta Polo Lacoste', priceBase: 90000 },
+            { name: 'Chaqueta Impermeable NorthFace', priceBase: 250000 }
+        ];
+
+        const homeModels = [
+            { name: 'Licuadora Oster Xpert', priceBase: 180000 },
+            { name: 'Juego de Sábanas 400 Hilos', priceBase: 80000 },
+            { name: 'Aspiradora Robot Samsung', priceBase: 900000 }
+        ];
+
+        let initialData = [];
+        const randomPrice = (base) => Math.floor(base * (1 + (Math.random() * 0.5 - 0.25)) / 100) * 100;
+
+        for (let i = 1; i <= count; i++) {
+            const categoryIndex = i % categories.length;
+            const category = categories[categoryIndex];
+            const prefix = prefixes[category];
+            const id = `${prefix}-${String(i).padStart(3, '0')}`;
+            let nombre, detalle, precio;
+
+            if (category === 'Ropa') {
+                const model = apparelModels[Math.floor(Math.random() * apparelModels.length)];
+                const size = sizes[Math.floor(Math.random() * sizes.length)];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                nombre = model.name;
+                detalle = `Talla ${size} / Color ${color}`;
+                precio = randomPrice(model.priceBase);
+            } else if (category === 'Tecnología') {
+                const model = techModels[Math.floor(Math.random() * techModels.length)];
+                const detail = model.details[Math.floor(Math.random() * model.details.length)];
+                nombre = model.name;
+                detalle = detail;
+                precio = randomPrice(model.priceBase);
+            } else { // Hogar
+                const model = homeModels[Math.floor(Math.random() * homeModels.length)];
+                nombre = model.name;
+                detalle = colors[Math.floor(Math.random() * colors.length)];
+                precio = randomPrice(model.priceBase);
+            }
+
+            initialData.push({
+                id: id,
+                nombre: nombre,
+                cantidad: Math.floor(Math.random() * 50) + 1,
+                precio: precio,
+                categoria: category,
+                detalle: detalle
+            });
+        }
+        return initialData;
+    }
+
+    // --- Funciones de Gestión de Múltiples Inventarios ---
+
+    function loadInventories() {
+        const storedInventories = localStorage.getItem(INVENTORY_STORAGE_KEY);
+        const storedActiveId = localStorage.getItem(ACTIVE_INVENTORY_KEY);
+
+        if (storedInventories) {
+            globalInventories = JSON.parse(storedInventories);
+        } else {
+            // Crear el inventario base si no existe
+            const initialProducts = generateInitialData(PRODUCT_COUNT_TARGET);
+            globalInventories['Inventario Principal'] = {
+                name: 'Inventario Principal',
+                categories: ['Tecnología', 'Ropa', 'Hogar'],
+                products: initialProducts
+            };
+        }
+
+        // Establecer el inventario activo
+        if (storedActiveId && globalInventories[storedActiveId]) {
+            activeInventoryId = storedActiveId;
+        } else {
+            activeInventoryId = 'Inventario Principal';
+        }
+        saveInventories();
+    }
+
+    function saveInventories() {
+        localStorage.setItem(INVENTORY_STORAGE_KEY, JSON.stringify(globalInventories));
+        localStorage.setItem(ACTIVE_INVENTORY_KEY, activeInventoryId);
+        updateInventorySelector();
+        updateInventoryTitles();
+    }
+
+    function getCurrentInventory() {
+        return globalInventories[activeInventoryId] ? globalInventories[activeInventoryId].products : [];
+    }
+
+    function updateInventoryTitles() {
+        const name = globalInventories[activeInventoryId].name;
+        document.getElementById('active-inventory-name').textContent = name;
+        document.getElementById('active-inventory-name-val').textContent = name;
+        document.getElementById('add-inventory-name').textContent = name;
+    }
+
+    function updateInventorySelector() {
+        const selector = document.getElementById('inventory-selector');
+        selector.innerHTML = '';
+        const keys = Object.keys(globalInventories);
+
+        keys.forEach(key => {
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = globalInventories[key].name;
+            if (key === activeInventoryId) {
+                option.selected = true;
+            }
+            selector.appendChild(option);
+        });
+    }
+
+    function changeActiveInventory(newId) {
+        if (globalInventories[newId]) {
+            activeInventoryId = newId;
+            saveInventories();
+            renderizarTabla();
+            mostrarSeccion('inventario', document.querySelector('.sidebar-item[onclick*="inventario"]'));
+            alert(`Inventario cambiado a: ${globalInventories[newId].name}`);
+        }
+    }
+
+    // --- Funciones de Inicialización y Login ---
+    const bienvenidaSection = document.getElementById('bienvenida');
+    const loginSection = document.getElementById('login-section');
+    const mainLayout = document.getElementById('main-layout');
+    const tablaBody = document.querySelector('#tabla-inventario tbody');
+    const loginForm = document.getElementById('login-form');
+    const formAgregar = document.getElementById('form-agregar');
+    const formNuevoInventario = document.getElementById('form-nuevo-inventario');
+    const searchInput = document.getElementById('search-input');
+    const currentTitle = document.getElementById('current-title');
+
+    // Elementos de la SECCIÓN DE VALORACIÓN
+    const totalProductosDisplay = document.getElementById('total-productos');
+    const valorTotalDisplay = document.getElementById('valor-total');
+
+    // Elementos de la Modal
+    const editModal = document.getElementById('edit-modal');
+    const modalProductName = document.getElementById('modal-product-name');
+    const modalProductId = document.getElementById('modal-product-id');
+    const modalProductDetail = document.getElementById('modal-product-detail');
+    const modalQuantityInput = document.getElementById('modal-quantity-input');
+    const btnDecrement = document.getElementById('btn-decrement');
+    const btnIncrement = document.getElementById('btn-increment');
+    const btnSaveQuantity = document.getElementById('btn-save-quantity');
+    const btnDeleteProduct = document.getElementById('btn-delete-product');
+
+    let currentEditProductId = null;
+
+    // Mapeo de IDs de secciones
+    const formContents = {
+        'home': document.getElementById('home-content'),
+        'inventario': document.getElementById('inventario-content'),
+        'valoracion': document.getElementById('valoracion-content'),
+        'nuevo-inventario': document.getElementById('nuevo-inventario-content'),
+        'agregar': document.getElementById('agregar-content'),
+        'acerca': document.getElementById('acerca-content')
+    };
+
+    const titles = {
+        'home': 'Página Principal',
+        'inventario': 'Gestión de Inventario',
+        'valoracion': 'Valoración Económica',
+        'nuevo-inventario': 'Configuración de Nuevo Inventario',
+        'agregar': 'Añadir Nuevo Artículo',
+        'acerca': 'Información del Proyecto'
+    };
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadInventories();
+        renderizarTabla(); // Renderiza el inventario activo
+
+        // Transición de Bienvenida a Login
+        setTimeout(() => bienvenidaSection.classList.add('hidden-section'), 2000);
+        setTimeout(() => {
+            bienvenidaSection.style.display = 'none';
+            loginSection.style.opacity = '1';
+            loginSection.style.visibility = 'visible';
+        }, 2500);
+
+        // Listeners de la Modal
+        btnDecrement.addEventListener('click', () => updateModalQuantity(-1));
+        btnIncrement.addEventListener('click', () => updateModalQuantity(1));
+        btnSaveQuantity.addEventListener('click', saveQuantityFromModal);
+        btnDeleteProduct.addEventListener('click', deleteProductFromModal);
+        modalQuantityInput.addEventListener('input', () => {
+            modalQuantityInput.value = Math.max(0, parseInt(modalQuantityInput.value) || 0);
+        });
+
+        // Listener del Buscador
+        if (searchInput) {
+            searchInput.addEventListener('input', filterInventory);
+        }
+    });
+
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const u = username.value;
+        const p = password.value;
+
+        if (u === VALID_USER && p === VALID_PASS) {
+            loginSection.classList.add('hidden-section');
+            setTimeout(() => {
+                loginSection.style.display = 'none';
+                mainLayout.style.display = 'flex'; // Mostrar el nuevo layout
+                // Obtener el primer item del sidebar (Home) y activarlo
+                mostrarSeccion('home', document.querySelector('.sidebar-item'));
+            }, 500);
+        } else {
+            alert("Usuario o Contraseña incorrectos. Intente con 'admin' / '123'");
+        }
+    });
+
+    function logout() {
+        if (confirm("¿Está seguro que desea cerrar la sesión?")) {
+            mainLayout.style.display = 'none';
+            loginSection.style.display = 'flex';
+            loginSection.classList.remove('hidden-section');
+            loginForm.reset();
+            username.focus();
+        }
+    }
+
+    // Función principal para cambiar la sección visible y actualizar el menú
+    function mostrarSeccion(id, element) {
+        // 1. Ocultar todos los contenidos
+        Object.values(formContents).forEach(sec => sec.style.display = 'none');
+
+        // 2. Mostrar el contenido solicitado
+        if (formContents[id]) {
+            formContents[id].style.display = 'block';
+            currentTitle.textContent = titles[id];
+
+            // Lógica específica
+            if (id === 'inventario') {
+                renderizarTabla();
+                // No limpiar el input de búsqueda para que se mantenga el filtro si se vuelve a la sección
+                filterInventory();
+            } else if (id === 'valoracion') {
+                calcularValorTotal();
+            }
+        }
+
+        // 3. Manejo del menú lateral (clase 'active')
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        if (element) {
+            element.classList.add('active');
+        }
+    }
+
+    // --- CRUD, Tablas y Filtros ---
+
+    function renderizarTabla(products = getCurrentInventory()) {
+        const currentProducts = products.length > 0 ? products : getCurrentInventory();
+        tablaBody.innerHTML = '';
+
+        currentProducts.forEach(producto => {
+            const row = tablaBody.insertRow();
+            row.setAttribute('data-product-id', producto.id);
+
+            row.insertCell(0).textContent = producto.id;
+            row.insertCell(1).textContent = producto.nombre;
+            row.insertCell(2).textContent = producto.detalle;
+
+            const cantidadCell = row.insertCell(3);
+            cantidadCell.textContent = producto.cantidad;
+            if (producto.cantidad < STOCK_WARNING_LEVEL) {
+                cantidadCell.classList.add('stock-bajo');
+            }
+
+            row.insertCell(4).textContent = formatCurrency(producto.precio);
+            row.insertCell(5).textContent = producto.categoria;
+
+            row.ondblclick = () => openEditModal(producto.id);
+        });
+    }
+
+    function filterInventory() {
+        const filter = searchInput.value.toUpperCase();
+        const currentProducts = getCurrentInventory();
+
+        const filteredProducts = currentProducts.filter(producto => {
+            return (
+                producto.id.toUpperCase().includes(filter) ||
+                producto.nombre.toUpperCase().includes(filter) ||
+                producto.detalle.toUpperCase().includes(filter) ||
+                producto.categoria.toUpperCase().includes(filter)
+            );
+        });
+        renderizarTabla(filteredProducts);
+    }
+
+    // --- Funciones de Modal de Edición ---
+
+    function getProductById(id) {
+        return getCurrentInventory().find(p => p.id === id);
+    }
+
+    function openEditModal(id) {
+        const product = getProductById(id);
+        if (product) {
+            currentEditProductId = id;
+            modalProductName.textContent = product.nombre;
+            modalProductId.textContent = product.id;
+            modalProductDetail.textContent = product.detalle;
+            modalQuantityInput.value = product.cantidad;
+            editModal.style.display = 'block';
+        }
+    }
+
+    function updateModalQuantity(change) {
+        let current = parseInt(modalQuantityInput.value) || 0;
+        current += change;
+        modalQuantityInput.value = Math.max(0, current);
+    }
+
+    function saveQuantityFromModal() {
+        const newQuantity = parseInt(modalQuantityInput.value) || 0;
+        const currentProducts = getCurrentInventory();
+        const productIndex = currentProducts.findIndex(p => p.id === currentEditProductId);
+
+        if (productIndex !== -1) {
+            currentProducts[productIndex].cantidad = newQuantity;
+            saveInventories();
+            editModal.style.display = 'none';
+            renderizarTabla();
+            filterInventory(); // Mantener el filtro aplicado si existe
+            alert(`Cantidad de "${currentProducts[productIndex].nombre}" actualizada a ${newQuantity}.`);
+        }
+    }
+
+    function deleteProductFromModal() {
+        if (confirm(`¿Está seguro que desea eliminar el producto con ID: ${currentEditProductId}? Esta acción es irreversible.`)) {
+            const currentProducts = getCurrentInventory();
+            const initialLength = currentProducts.length;
+
+            globalInventories[activeInventoryId].products = currentProducts.filter(p => p.id !== currentEditProductId);
+
+            if (globalInventories[activeInventoryId].products.length < initialLength) {
+                saveInventories();
+                editModal.style.display = 'none';
+                renderizarTabla();
+                filterInventory();
+                alert(`Producto con ID: ${currentEditProductId} eliminado exitosamente.`);
+            } else {
+                alert("Error al intentar eliminar el producto.");
+            }
+        }
+    }
+
+
+    // --- Formulario Nuevo Inventario ---
+
+    formNuevoInventario.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const newName = document.getElementById('new-inventory-name').value.trim();
+        const categoryInput = document.getElementById('new-inventory-categories').value.trim();
+        const categories = categoryInput.split(',').map(c => c.trim()).filter(c => c.length > 0);
+
+        if (globalInventories[newName]) {
+            alert(`Ya existe un inventario con el nombre "${newName}". Por favor, elija otro.`);
+            return;
+        }
+
+        globalInventories[newName] = {
+            name: newName,
+            categories: categories,
+            products: [] // Empieza vacío
+        };
+
+        activeInventoryId = newName; // Activar el nuevo inventario
+        saveInventories();
+        formNuevoInventario.reset();
+        alert(`Inventario "${newName}" creado y activado exitosamente. Puede empezar a añadir productos.`);
+        mostrarSeccion('agregar', document.querySelector('.sidebar-item[onclick*="agregar"]'));
+    });
+
+
+    // --- Formulario Agregar Producto (VALIDACIÓN AGREGADA AQUÍ) ---
+
+    formAgregar.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const newId = document.getElementById('add-id').value.trim();
+        const currentProducts = getCurrentInventory();
+
+        // 🚨 VALIDACIÓN: Verificar si el ID ya existe en el inventario activo
+        const isDuplicate = currentProducts.some(product => product.id.toUpperCase() === newId.toUpperCase());
+
+        if (isDuplicate) {
+            alert(`Error: Ya existe un producto con el ID "${newId}" en el inventario activo. Por favor, use la sección "Ver Inventario" para modificar la cantidad, o ingrese un ID diferente.`);
+            return; // Detiene la ejecución si el producto es un duplicado
+        }
+
+        // Si el ID no existe, procede a agregar el producto:
+        const nuevoProducto = {
+            id: newId,
+            nombre: document.getElementById('add-nombre').value.trim(),
+            detalle: document.getElementById('add-detalle').value.trim(),
+            cantidad: parseInt(document.getElementById('add-cantidad').value),
+            precio: parseFloat(document.getElementById('add-precio').value),
+            categoria: document.getElementById('add-categoria').value.trim()
+        };
+
+        // Agregar el nuevo producto al inventario activo
+        globalInventories[activeInventoryId].products.push(nuevoProducto);
+
+        // Guardar y notificar
+        saveInventories();
+        formAgregar.reset();
+        alert(`Producto "${nuevoProducto.nombre}" (ID: ${nuevoProducto.id}) agregado exitosamente.`);
+        mostrarSeccion('inventario', document.querySelector('.sidebar-item[onclick*="inventario"]'));
+    });
+
+
+    // --- Funciones de Valoración Total ---
+
+    function calcularValorTotal() {
+        const products = getCurrentInventory();
+        let valorTotal = 0;
+        let totalProductosUnicos = products.length;
+
+        products.forEach(p => {
+            valorTotal += (p.cantidad * p.precio);
+        });
+
+        totalProductosDisplay.textContent = totalProductosUnicos;
+        valorTotalDisplay.textContent = formatCurrency(valorTotal);
+    }
+
+    // --- Función de Utilidad ---
+
+    function formatCurrency(amount) {
+        // Formato para Peso Colombiano (COP)
+        return new Intl.NumberFormat('es-CO', {
+            style: 'currency',
+            currency: 'COP',
+            minimumFractionDigits: 0 // Sin decimales para montos grandes
+        }).format(amount);
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "name": "sgi-final-node",
+  "version": "1.0.0",
+  "description": "SGI Inventory System on Express",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
