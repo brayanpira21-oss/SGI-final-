@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventario | SGI - Menú Lateral</title>
+    <title>Inventario | SGI - Gestión Completa</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
@@ -101,12 +101,29 @@
             padding: 20px 0;
             flex-shrink: 0;
         }
-        #sidebar h2 {
+
+        /* ESTILOS AÑADIDOS/MODIFICADOS PARA EL LOGO */
+        #logo-container {
+            display: flex;
+            align-items: center; /* Centra verticalmente el logo y el texto */
             padding: 0 20px;
-            color: var(--color-primary);
-            font-size: 1.5em;
             margin-bottom: 25px;
         }
+
+        #logo-img {
+            width: 40px; /* Tamaño moderado para el logo */
+            height: 40px;
+            margin-right: 10px;
+            border-radius: 4px; /* Opcional: para logos cuadrados o circulares */
+        }
+
+        #sidebar h2 {
+            color: var(--color-primary);
+            font-size: 1.5em;
+            margin: 0; /* Asegura que no haya margen extra del h2 */
+        }
+        /* FIN ESTILOS LOGO */
+
         .sidebar-item {
             display: flex;
             align-items: center;
@@ -222,17 +239,36 @@
             padding: 12px 15px; border-bottom: 1px solid #e0e0e0; text-align: left;
         }
         .data-table th { background-color: var(--color-primary); color: white; }
-        .data-table tr:hover { background-color: #f0f0f0; }
+        .data-table tr:hover { background-color: #f0f0f0; cursor: pointer; }
         .form-group { margin-bottom: 15px; display: flex; align-items: center; }
         .form-group label { width: 100px; font-weight: bold; }
         .form-group input, .form-group textarea { flex-grow: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
         .stock-bajo { font-weight: bold; color: var(--color-red); }
+
+        .btn-table {
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+        .btn-stock { background-color: var(--color-secondary); }
+
+        /* Modal Generico */
+        .modal {
+            display: none; position: fixed; z-index: 4000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 90%; max-width: 400px; border-radius: 10px; box-shadow: var(--shadow-deep);
+        }
+
     </style>
 </head>
 <body>
 
 <section id="bienvenida" class="full-screen-section">
-    <h1> Bienvenidos al SGI </h1>
+    <h1> BIENVENIDOS A SGI </h1>
 </section>
 
 <section id="login-section" class="full-screen-section" style="background-color: var(--color-bg); opacity: 0; visibility: hidden; transition: opacity 0.5s;">
@@ -250,8 +286,10 @@
 <div id="main-layout">
 
     <nav id="sidebar">
-        <h2>SGI | Inventario</h2>
-
+        <div id="logo-container">
+            <img src="img.jpg" alt="Logo SGI" id="logo-img">
+            <h2>SGI | Inventario</h2>
+        </div>
         <div id="inventory-selector-container">
             <label for="inventory-selector">Inventario Activo:</label>
             <select id="inventory-selector" onchange="changeActiveInventory(this.value)">
@@ -280,6 +318,11 @@
         <a class="sidebar-item" href="#" onclick="mostrarSeccion('agregar', this)">
             <span class="material-symbols-outlined">add_box</span>
             Añadir Producto
+        </a>
+
+        <a class="sidebar-item" href="#" onclick="abrirModalEliminarInventario()" style="color: var(--color-red);">
+            <span class="material-symbols-outlined" style="color: var(--color-red);">delete_forever</span>
+            Eliminar un Inventario
         </a>
         <a class="sidebar-item" href="#" onclick="mostrarSeccion('acerca', this)">
             <span class="material-symbols-outlined">info</span>
@@ -405,33 +448,20 @@
 
             <div id="acerca-content" class="form-content">
                 <h3>Acerca de SGI</h3>
-
                 <p><strong>Desarrolladores:</strong></p>
                 <ul>
-                    <li>Brayan Piraneque — <strong>Scrum Master</strong></li>
-                    <li>Cristian Quiroga — <strong>Product Owner</strong></li>
-                    <li>Alejandro Jaimes — <strong>Developer Team</strong></li>
+                    <li>Brayan Piraneque — **Scrum Master**</li>
+                    <li>Cristian Quiroga — **Product Owner**</li>
+                    <li>Alejandro Jaimes — **Developer Team**</li>
                 </ul>
-
-                <p><strong>Versión:</strong> 9.8.5</p>
-
-                <p><strong>Tecnologías utilizadas:</strong></p>
-                <ul>
-                    <li>Node.js — Backend del sistema</li>
-                    <li>Express.js — Gestión de rutas y servidor web</li>
-                    <li>HTML5, CSS3 y JavaScript — Interfaz y funcionalidades del cliente</li>
-                    <li>Bootstrap — Estilos responsivos</li>
-                    <li>JSP (cuando aplica) — Renderizado dinámico</li>
-                    <li>GitHub — Control de versiones</li>
-                </ul>
-
-                <p><strong>Descripción:</strong> SGI (Sistema de Gestión de Inventarios) es una plataforma diseñada para administrar productos, existencias y precios de manera eficiente. Su objetivo es ofrecer una herramienta sencilla, rápida y confiable para la gestión operativa de inventarios.</p>
-
+                <p><strong>Versión:</strong> 1.0</p>
                 <p><strong>Eslogan:</strong> "Organizamos inventarios, construimos eficiencia"</p>
             </div>
 
-        </div> </div> </div> <div id="edit-modal" style="display:none; position:fixed; z-index:4000; left:0; top:0; width:100%; height:100%; overflow:auto; background-color:rgba(0,0,0,0.4);">
-    <div class="modal-content" style="background-color:#fefefe; margin:15% auto; padding:20px; border:1px solid #888; width:90%; max-width:400px; border-radius:10px; box-shadow:var(--shadow-deep);">
+        </div> </div> </div>
+
+<div id="edit-modal" class="modal">
+    <div class="modal-content">
         <span class="close-btn" onclick="document.getElementById('edit-modal').style.display='none';" style="color:#aaa; float:right; font-size:28px; font-weight:bold; cursor:pointer;">&times;</span>
         <h3 id="modal-product-name" style="color:var(--color-primary);">Detalles del Producto</h3>
         <p>ID: <strong id="modal-product-id"></strong></p>
@@ -451,6 +481,23 @@
     </div>
 </div>
 
+<div id="delete-inventory-modal" class="modal">
+    <div class="modal-content" style="border: 2px solid var(--color-red);">
+        <span class="close-btn" onclick="document.getElementById('delete-inventory-modal').style.display='none';" style="color:#aaa; float:right; font-size:28px; font-weight:bold; cursor:pointer;">&times;</span>
+        <h3 style="color: var(--color-red);">Eliminar un Inventario</h3>
+        <p>Seleccione el inventario que desea eliminar permanentemente. <br><strong>¡Esta acción no se puede deshacer!</strong></p>
+
+        <div class="form-group" style="flex-direction: column; align-items: flex-start;">
+            <label style="width: 100%; margin-bottom: 5px;">Seleccionar Inventario:</label>
+            <select id="delete-inventory-select" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px;">
+            </select>
+        </div>
+
+        <button onclick="confirmDeleteInventory()" class="btn-delete" style="width: 100%; margin-top: 20px;">Confirmar Eliminación</button>
+        <button onclick="document.getElementById('delete-inventory-modal').style.display='none';" class="btn-submit" style="width: 100%; margin-top: 10px; background-color: #777;">Cancelar</button>
+    </div>
+</div>
+
 
 <script>
     const VALID_USER = 'admin';
@@ -458,21 +505,11 @@
     const STOCK_WARNING_LEVEL = 10;
     const INVENTORY_STORAGE_KEY = 'sgi_multiple_inventarios';
     const ACTIVE_INVENTORY_KEY = 'sgi_inventario_activo';
-    const PRODUCT_COUNT_TARGET = 100; // Objetivo de productos iniciales
+    const PRODUCT_COUNT_TARGET = 100;
 
-    // Estructura de almacenamiento de múltiples inventarios:
-    // {
-    //   'Inventario Principal': {
-    //      name: 'Inventario Principal',
-    //      categories: ['Tecnología', 'Ropa', 'Hogar'],
-    //      products: [...]
-    //   },
-    //   'Bodega Norte': { ... }
-    // }
     let globalInventories = {};
-    let activeInventoryId = 'Inventario Principal'; // ID del inventario actualmente visible
+    let activeInventoryId = 'Inventario Principal';
 
-    // --- Funciones de Generación de Datos Realistas ---
     function generateInitialData(count) {
         const categories = ['Tecnología', 'Ropa', 'Hogar'];
         const prefixes = { 'Tecnología': 'TEC', 'Ropa': 'ROP', 'Hogar': 'HOG' };
@@ -540,8 +577,6 @@
         return initialData;
     }
 
-    // --- Funciones de Gestión de Múltiples Inventarios ---
-
     function loadInventories() {
         const storedInventories = localStorage.getItem(INVENTORY_STORAGE_KEY);
         const storedActiveId = localStorage.getItem(ACTIVE_INVENTORY_KEY);
@@ -549,7 +584,6 @@
         if (storedInventories) {
             globalInventories = JSON.parse(storedInventories);
         } else {
-            // Crear el inventario base si no existe
             const initialProducts = generateInitialData(PRODUCT_COUNT_TARGET);
             globalInventories['Inventario Principal'] = {
                 name: 'Inventario Principal',
@@ -558,11 +592,11 @@
             };
         }
 
-        // Establecer el inventario activo
         if (storedActiveId && globalInventories[storedActiveId]) {
             activeInventoryId = storedActiveId;
         } else {
-            activeInventoryId = 'Inventario Principal';
+            const keys = Object.keys(globalInventories);
+            if (keys.length > 0) activeInventoryId = keys[0];
         }
         saveInventories();
     }
@@ -579,10 +613,12 @@
     }
 
     function updateInventoryTitles() {
-        const name = globalInventories[activeInventoryId].name;
-        document.getElementById('active-inventory-name').textContent = name;
-        document.getElementById('active-inventory-name-val').textContent = name;
-        document.getElementById('add-inventory-name').textContent = name;
+        if(globalInventories[activeInventoryId]){
+            const name = globalInventories[activeInventoryId].name;
+            document.getElementById('active-inventory-name').textContent = name;
+            document.getElementById('active-inventory-name-val').textContent = name;
+            document.getElementById('add-inventory-name').textContent = name;
+        }
     }
 
     function updateInventorySelector() {
@@ -607,11 +643,10 @@
             saveInventories();
             renderizarTabla();
             mostrarSeccion('inventario', document.querySelector('.sidebar-item[onclick*="inventario"]'));
-            alert(`Inventario cambiado a: ${globalInventories[newId].name}`);
+            // alert(`Inventario cambiado a: ${globalInventories[newId].name}`);
         }
     }
 
-    // --- Funciones de Inicialización y Login ---
     const bienvenidaSection = document.getElementById('bienvenida');
     const loginSection = document.getElementById('login-section');
     const mainLayout = document.getElementById('main-layout');
@@ -622,11 +657,9 @@
     const searchInput = document.getElementById('search-input');
     const currentTitle = document.getElementById('current-title');
 
-    // Elementos de la SECCIÓN DE VALORACIÓN
     const totalProductosDisplay = document.getElementById('total-productos');
     const valorTotalDisplay = document.getElementById('valor-total');
 
-    // Elementos de la Modal
     const editModal = document.getElementById('edit-modal');
     const modalProductName = document.getElementById('modal-product-name');
     const modalProductId = document.getElementById('modal-product-id');
@@ -637,9 +670,13 @@
     const btnSaveQuantity = document.getElementById('btn-save-quantity');
     const btnDeleteProduct = document.getElementById('btn-delete-product');
 
+    // Modal de Eliminacion de Inventario
+    const deleteInventoryModal = document.getElementById('delete-inventory-modal');
+    const deleteInventorySelect = document.getElementById('delete-inventory-select');
+
+
     let currentEditProductId = null;
 
-    // Mapeo de IDs de secciones
     const formContents = {
         'home': document.getElementById('home-content'),
         'inventario': document.getElementById('inventario-content'),
@@ -661,9 +698,8 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         loadInventories();
-        renderizarTabla(); // Renderiza el inventario activo
+        renderizarTabla();
 
-        // Transición de Bienvenida a Login
         setTimeout(() => bienvenidaSection.classList.add('hidden-section'), 2000);
         setTimeout(() => {
             bienvenidaSection.style.display = 'none';
@@ -671,7 +707,6 @@
             loginSection.style.visibility = 'visible';
         }, 2500);
 
-        // Listeners de la Modal
         btnDecrement.addEventListener('click', () => updateModalQuantity(-1));
         btnIncrement.addEventListener('click', () => updateModalQuantity(1));
         btnSaveQuantity.addEventListener('click', saveQuantityFromModal);
@@ -680,7 +715,6 @@
             modalQuantityInput.value = Math.max(0, parseInt(modalQuantityInput.value) || 0);
         });
 
-        // Listener del Buscador
         if (searchInput) {
             searchInput.addEventListener('input', filterInventory);
         }
@@ -688,251 +722,313 @@
 
     loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        const u = username.value;
-        const p = password.value;
+        const u = document.getElementById('username').value;
+        const p = document.getElementById('password').value;
 
         if (u === VALID_USER && p === VALID_PASS) {
-            loginSection.classList.add('hidden-section');
+            // Login exitoso
+            loginSection.style.opacity = '0';
             setTimeout(() => {
                 loginSection.style.display = 'none';
-                mainLayout.style.display = 'flex'; // Mostrar el nuevo layout
-                // Obtener el primer item del sidebar (Home) y activarlo
-                mostrarSeccion('home', document.querySelector('.sidebar-item'));
+                mainLayout.style.display = 'flex';
+                // Asegurar que el inventario activo se muestre correctamente al entrar
+                mostrarSeccion('home', document.querySelector('.sidebar-item[onclick*="home"]'));
+                renderizarTabla();
             }, 500);
         } else {
-            alert("Usuario o Contraseña incorrectos. Intente con 'admin' / '123'");
+            alert('Credenciales incorrectas. Intente de nuevo.');
         }
     });
 
     function logout() {
-        if (confirm("¿Está seguro que desea cerrar la sesión?")) {
-            mainLayout.style.display = 'none';
-            loginSection.style.display = 'flex';
-            loginSection.classList.remove('hidden-section');
-            loginForm.reset();
-            username.focus();
-        }
+        // Opcional: limpiar datos de sesión si existieran
+        // sessionStorage.removeItem('isLoggedIn');
+        alert('Sesión cerrada. Volviendo a la pantalla de login.');
+        mainLayout.style.display = 'none';
+        loginSection.style.display = 'flex';
+        setTimeout(() => loginSection.style.opacity = '1', 10);
+        // Resetear el formulario de login
+        loginForm.reset();
+        document.getElementById('username').focus();
     }
 
-    // Función principal para cambiar la sección visible y actualizar el menú
+    // Función para formatear a COP (Pesos Colombianos)
+    function formatCOP(number) {
+        return new Intl.NumberFormat('es-CO', {
+            style: 'currency',
+            currency: 'COP',
+            minimumFractionDigits: 0
+        }).format(number);
+    }
+
+    // --- Funciones de la Interfaz ---
+
     function mostrarSeccion(id, element) {
-        // 1. Ocultar todos los contenidos
-        Object.values(formContents).forEach(sec => sec.style.display = 'none');
+        // Ocultar todas las secciones de contenido
+        Object.values(formContents).forEach(content => {
+            content.style.display = 'none';
+        });
 
-        // 2. Mostrar el contenido solicitado
-        if (formContents[id]) {
-            formContents[id].style.display = 'block';
-            currentTitle.textContent = titles[id];
+        // Mostrar la sección solicitada
+        const targetSection = formContents[id];
+        if (targetSection) {
+            targetSection.style.display = 'block';
+            currentTitle.textContent = titles[id] || 'SGI';
 
-            // Lógica específica
+            // Actualizar clase activa del sidebar
+            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+            if (element) {
+                element.classList.add('active');
+            }
+
+            // Acciones específicas al cambiar de sección
             if (id === 'inventario') {
                 renderizarTabla();
-                // No limpiar el input de búsqueda para que se mantenga el filtro si se vuelve a la sección
-                filterInventory();
             } else if (id === 'valoracion') {
-                calcularValorTotal();
+                calcularValoracion();
             }
-        }
-
-        // 3. Manejo del menú lateral (clase 'active')
-        document.querySelectorAll('.sidebar-item').forEach(item => {
-            item.classList.remove('active');
-        });
-        if (element) {
-            element.classList.add('active');
         }
     }
 
-    // --- CRUD, Tablas y Filtros ---
+    // --- Funciones de Gestión de Inventario (CRUD) ---
 
-    function renderizarTabla(products = getCurrentInventory()) {
-        const currentProducts = products.length > 0 ? products : getCurrentInventory();
+    function renderizarTabla(filterText = '') {
+        const inventario = getCurrentInventory();
         tablaBody.innerHTML = '';
+        const filterLower = filterText.toLowerCase().trim();
+        let productosFiltrados = inventario;
 
-        currentProducts.forEach(producto => {
+        if (filterLower) {
+            productosFiltrados = inventario.filter(p =>
+                p.id.toLowerCase().includes(filterLower) ||
+                p.nombre.toLowerCase().includes(filterLower) ||
+                p.detalle.toLowerCase().includes(filterLower) ||
+                p.categoria.toLowerCase().includes(filterLower)
+            );
+        }
+
+        productosFiltrados.forEach(producto => {
             const row = tablaBody.insertRow();
-            row.setAttribute('data-product-id', producto.id);
+            // Resaltar stock bajo
+            if (producto.cantidad <= STOCK_WARNING_LEVEL) {
+                row.classList.add('stock-bajo');
+            }
 
             row.insertCell(0).textContent = producto.id;
             row.insertCell(1).textContent = producto.nombre;
             row.insertCell(2).textContent = producto.detalle;
-
-            const cantidadCell = row.insertCell(3);
-            cantidadCell.textContent = producto.cantidad;
-            if (producto.cantidad < STOCK_WARNING_LEVEL) {
-                cantidadCell.classList.add('stock-bajo');
-            }
-
-            row.insertCell(4).textContent = formatCurrency(producto.precio);
+            row.insertCell(3).textContent = producto.cantidad;
+            row.insertCell(4).textContent = formatCOP(producto.precio);
             row.insertCell(5).textContent = producto.categoria;
 
-            row.ondblclick = () => openEditModal(producto.id);
+            // Añadir evento de doble clic para editar/eliminar
+            row.addEventListener('dblclick', () => openEditModal(producto.id));
         });
     }
 
     function filterInventory() {
-        const filter = searchInput.value.toUpperCase();
-        const currentProducts = getCurrentInventory();
-
-        const filteredProducts = currentProducts.filter(producto => {
-            return (
-                producto.id.toUpperCase().includes(filter) ||
-                producto.nombre.toUpperCase().includes(filter) ||
-                producto.detalle.toUpperCase().includes(filter) ||
-                producto.categoria.toUpperCase().includes(filter)
-            );
-        });
-        renderizarTabla(filteredProducts);
+        const filterText = searchInput.value;
+        renderizarTabla(filterText);
     }
 
-    // --- Funciones de Modal de Edición ---
-
-    function getProductById(id) {
-        return getCurrentInventory().find(p => p.id === id);
-    }
-
-    function openEditModal(id) {
-        const product = getProductById(id);
-        if (product) {
-            currentEditProductId = id;
-            modalProductName.textContent = product.nombre;
-            modalProductId.textContent = product.id;
-            modalProductDetail.textContent = product.detalle;
-            modalQuantityInput.value = product.cantidad;
-            editModal.style.display = 'block';
+    function openEditModal(productId) {
+        const producto = getCurrentInventory().find(p => p.id === productId);
+        if (!producto) {
+            alert('Producto no encontrado.');
+            return;
         }
+
+        currentEditProductId = productId;
+        modalProductName.textContent = producto.nombre;
+        modalProductId.textContent = producto.id;
+        modalProductDetail.textContent = producto.detalle;
+        modalQuantityInput.value = producto.cantidad;
+
+        editModal.style.display = 'block';
     }
 
-    function updateModalQuantity(change) {
+    function updateModalQuantity(delta) {
         let current = parseInt(modalQuantityInput.value) || 0;
-        current += change;
+        current += delta;
         modalQuantityInput.value = Math.max(0, current);
     }
 
     function saveQuantityFromModal() {
-        const newQuantity = parseInt(modalQuantityInput.value) || 0;
-        const currentProducts = getCurrentInventory();
-        const productIndex = currentProducts.findIndex(p => p.id === currentEditProductId);
+        const newQuantity = parseInt(modalQuantityInput.value);
+        if (newQuantity === undefined || isNaN(newQuantity) || newQuantity < 0) {
+            alert('Cantidad inválida.');
+            return;
+        }
 
-        if (productIndex !== -1) {
-            currentProducts[productIndex].cantidad = newQuantity;
+        const inventario = globalInventories[activeInventoryId].products;
+        const index = inventario.findIndex(p => p.id === currentEditProductId);
+
+        if (index > -1) {
+            inventario[index].cantidad = newQuantity;
             saveInventories();
+            renderizarTabla(searchInput.value);
             editModal.style.display = 'none';
-            renderizarTabla();
-            filterInventory(); // Mantener el filtro aplicado si existe
-            alert(`Cantidad de "${currentProducts[productIndex].nombre}" actualizada a ${newQuantity}.`);
+            alert(`Cantidad de ${inventario[index].nombre} actualizada a ${newQuantity}.`);
         }
     }
 
     function deleteProductFromModal() {
-        if (confirm(`¿Está seguro que desea eliminar el producto con ID: ${currentEditProductId}? Esta acción es irreversible.`)) {
-            const currentProducts = getCurrentInventory();
-            const initialLength = currentProducts.length;
+        if (!confirm(`¿Está seguro de que desea ELIMINAR el producto ${currentEditProductId} del inventario?`)) {
+            return;
+        }
 
-            globalInventories[activeInventoryId].products = currentProducts.filter(p => p.id !== currentEditProductId);
+        const inventario = globalInventories[activeInventoryId].products;
+        const initialLength = inventario.length;
 
-            if (globalInventories[activeInventoryId].products.length < initialLength) {
-                saveInventories();
-                editModal.style.display = 'none';
-                renderizarTabla();
-                filterInventory();
-                alert(`Producto con ID: ${currentEditProductId} eliminado exitosamente.`);
-            } else {
-                alert("Error al intentar eliminar el producto.");
-            }
+        // Filtrar para crear un nuevo array sin el producto a eliminar
+        globalInventories[activeInventoryId].products = inventario.filter(p => p.id !== currentEditProductId);
+
+        if (globalInventories[activeInventoryId].products.length < initialLength) {
+            saveInventories();
+            renderizarTabla(searchInput.value);
+            editModal.style.display = 'none';
+            alert(`Producto ${currentEditProductId} eliminado correctamente.`);
+        } else {
+            alert('Error al intentar eliminar el producto.');
         }
     }
 
+    function calcularValoracion() {
+        const inventario = getCurrentInventory();
+        let totalUnicos = inventario.length;
+        let valorTotal = 0;
 
-    // --- Formulario Nuevo Inventario ---
+        inventario.forEach(producto => {
+            valorTotal += (producto.cantidad * producto.precio);
+        });
+
+        totalProductosDisplay.textContent = totalUnicos;
+        valorTotalDisplay.textContent = formatCOP(valorTotal);
+    }
+
+    // --- Gestión de Formularios ---
+
+    formAgregar.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const id = document.getElementById('add-id').value.trim();
+        const nombre = document.getElementById('add-nombre').value.trim();
+        const detalle = document.getElementById('add-detalle').value.trim();
+        const categoria = document.getElementById('add-categoria').value.trim();
+        const cantidad = parseInt(document.getElementById('add-cantidad').value);
+        const precio = parseFloat(document.getElementById('add-precio').value);
+
+        if (getCurrentInventory().some(p => p.id === id)) {
+            alert(`Error: Ya existe un producto con el ID "${id}" en este inventario.`);
+            return;
+        }
+
+        if (isNaN(cantidad) || cantidad <= 0) {
+            alert('La cantidad debe ser un número positivo.');
+            return;
+        }
+
+        if (isNaN(precio) || precio < 0) {
+            alert('El precio debe ser un número positivo o cero.');
+            return;
+        }
+
+        const nuevoProducto = {
+            id: id,
+            nombre: nombre,
+            detalle: detalle,
+            categoria: categoria,
+            cantidad: cantidad,
+            precio: precio
+        };
+
+        globalInventories[activeInventoryId].products.push(nuevoProducto);
+        saveInventories();
+        formAgregar.reset();
+        alert(`Producto "${nombre}" agregado al inventario.`);
+        mostrarSeccion('inventario', document.querySelector('.sidebar-item[onclick*="inventario"]')); // Muestra la tabla
+
+    });
 
     formNuevoInventario.addEventListener('submit', (e) => {
         e.preventDefault();
+
         const newName = document.getElementById('new-inventory-name').value.trim();
-        const categoryInput = document.getElementById('new-inventory-categories').value.trim();
-        const categories = categoryInput.split(',').map(c => c.trim()).filter(c => c.length > 0);
+        const categoryString = document.getElementById('new-inventory-categories').value.trim();
+        const categories = categoryString.split(',').map(c => c.trim()).filter(c => c.length > 0);
 
         if (globalInventories[newName]) {
-            alert(`Ya existe un inventario con el nombre "${newName}". Por favor, elija otro.`);
+            alert(`Error: El nombre de inventario "${newName}" ya existe.`);
+            return;
+        }
+
+        if (categories.length === 0) {
+             alert('Debe definir al menos una categoría.');
             return;
         }
 
         globalInventories[newName] = {
             name: newName,
             categories: categories,
-            products: [] // Empieza vacío
+            products: []
         };
 
-        activeInventoryId = newName; // Activar el nuevo inventario
+        activeInventoryId = newName;
         saveInventories();
         formNuevoInventario.reset();
-        alert(`Inventario "${newName}" creado y activado exitosamente. Puede empezar a añadir productos.`);
-        mostrarSeccion('agregar', document.querySelector('.sidebar-item[onclick*="agregar"]'));
+        alert(`Inventario "${newName}" creado y activado exitosamente.`);
+        mostrarSeccion('home', document.querySelector('.sidebar-item[onclick*="home"]'));
     });
 
+    function abrirModalEliminarInventario() {
+        // Limpiar y llenar el selector con todos los inventarios, excluyendo el activo (si es el único)
+        deleteInventorySelect.innerHTML = '';
+        const keys = Object.keys(globalInventories);
 
-    // --- Formulario Agregar Producto (VALIDACIÓN AGREGADA AQUÍ) ---
-
-    formAgregar.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        const newId = document.getElementById('add-id').value.trim();
-        const currentProducts = getCurrentInventory();
-
-        // 🚨 VALIDACIÓN: Verificar si el ID ya existe en el inventario activo
-        const isDuplicate = currentProducts.some(product => product.id.toUpperCase() === newId.toUpperCase());
-
-        if (isDuplicate) {
-            alert(`Error: Ya existe un producto con el ID "${newId}" en el inventario activo. Por favor, use la sección "Ver Inventario" para modificar la cantidad, o ingrese un ID diferente.`);
-            return; // Detiene la ejecución si el producto es un duplicado
+        if (keys.length === 0) {
+            alert("No hay inventarios para eliminar.");
+            return;
         }
 
-        // Si el ID no existe, procede a agregar el producto:
-        const nuevoProducto = {
-            id: newId,
-            nombre: document.getElementById('add-nombre').value.trim(),
-            detalle: document.getElementById('add-detalle').value.trim(),
-            cantidad: parseInt(document.getElementById('add-cantidad').value),
-            precio: parseFloat(document.getElementById('add-precio').value),
-            categoria: document.getElementById('add-categoria').value.trim()
-        };
+        // Si solo queda un inventario, no se permite eliminarlo
+        if (keys.length === 1) {
+            alert(`No puede eliminar el único inventario restante: ${globalInventories[keys[0]].name}`);
+            return;
+        }
 
-        // Agregar el nuevo producto al inventario activo
-        globalInventories[activeInventoryId].products.push(nuevoProducto);
-
-        // Guardar y notificar
-        saveInventories();
-        formAgregar.reset();
-        alert(`Producto "${nuevoProducto.nombre}" (ID: ${nuevoProducto.id}) agregado exitosamente.`);
-        mostrarSeccion('inventario', document.querySelector('.sidebar-item[onclick*="inventario"]'));
-    });
-
-
-    // --- Funciones de Valoración Total ---
-
-    function calcularValorTotal() {
-        const products = getCurrentInventory();
-        let valorTotal = 0;
-        let totalProductosUnicos = products.length;
-
-        products.forEach(p => {
-            valorTotal += (p.cantidad * p.precio);
+        keys.forEach(key => {
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = globalInventories[key].name;
+            deleteInventorySelect.appendChild(option);
         });
 
-        totalProductosDisplay.textContent = totalProductosUnicos;
-        valorTotalDisplay.textContent = formatCurrency(valorTotal);
+        deleteInventoryModal.style.display = 'block';
     }
 
-    // --- Función de Utilidad ---
+    function confirmDeleteInventory() {
+        const inventoryToDeleteId = deleteInventorySelect.value;
+        if (!inventoryToDeleteId) {
+            alert("Seleccione un inventario.");
+            return;
+        }
 
-    function formatCurrency(amount) {
-        // Formato para Peso Colombiano (COP)
-        return new Intl.NumberFormat('es-CO', {
-            style: 'currency',
-            currency: 'COP',
-            minimumFractionDigits: 0 // Sin decimales para montos grandes
-        }).format(amount);
+        if (inventoryToDeleteId === activeInventoryId) {
+            alert("No puede eliminar el inventario que está actualmente activo. Por favor, cambie el inventario activo antes de eliminar.");
+            return;
+        }
+
+        if (confirm(`¿Está ABSOLUTAMENTE seguro de que desea eliminar PERMANENTEMENTE el inventario "${globalInventories[inventoryToDeleteId].name}"?`)) {
+            delete globalInventories[inventoryToDeleteId];
+            saveInventories(); // Esto actualizará el selector
+            deleteInventoryModal.style.display = 'none';
+            alert(`Inventario "${inventoryToDeleteId}" eliminado con éxito.`);
+
+            // Reabrir el modal con la lista actualizada si es necesario, o volver a Home
+            mostrarSeccion('home', document.querySelector('.sidebar-item[onclick*="home"]'));
+        }
     }
+
 
 </script>
 </body>
