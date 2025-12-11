@@ -652,6 +652,11 @@
 
     let globalInventories = {};
     let activeInventoryId = 'Inventario Principal';
+    /**
+ * Genera datos de productos simulados para el inventario de demo, con precios y detalles variados.
+ * @param {number} count - El número de productos a generar.
+ * @returns {Array<Object>} Un array de objetos de producto.
+   */
 
     function generateInitialData(count) {
         const categories = ['Tecnología', 'Ropa', 'Hogar'];
@@ -719,7 +724,12 @@
         }
         return initialData;
     }
-
+/**
+ * Persiste el estado actual de 'globalInventories' y 'activeInventoryId' en
+ * localStorage, y también actualiza los selectores y títulos de la UI.
+ * Debe llamarse después de cualquier modificación de datos (CRUD).
+ * @returns {void}
+ */
     function loadInventories() {
         const storedInventories = localStorage.getItem(INVENTORY_STORAGE_KEY);
         const storedActiveId = localStorage.getItem(ACTIVE_INVENTORY_KEY);
@@ -743,18 +753,32 @@
         }
         saveInventories();
     }
-
+/**
+ * Obtiene el array de productos del inventario actualmente activo (activeInventoryId).
+ *
+ * @returns {Array<Object>} Lista de productos del inventario activo.
+ */
     function saveInventories() {
         localStorage.setItem(INVENTORY_STORAGE_KEY, JSON.stringify(globalInventories));
         localStorage.setItem(ACTIVE_INVENTORY_KEY, activeInventoryId);
         updateInventorySelector();
         updateInventoryTitles();
     }
-
+/**
+ * Actualiza los elementos de texto en la UI que muestran el nombre del inventario activo
+ * en las secciones de contenido (Inventario Actual, Valoración, Agregar Producto).
+ *
+ * @returns {void}
+ */
     function getCurrentInventory() {
         return globalInventories[activeInventoryId] ? globalInventories[activeInventoryId].products : [];
     }
-
+/**
+ * Rellena y sincroniza los selectores de inventario en la barra lateral y en el modal de eliminación.
+ * Deshabilita la opción de eliminación si solo queda un inventario.
+ *
+ * @returns {void}
+ */
     function updateInventoryTitles() {
         if(globalInventories[activeInventoryId]){
             const name = globalInventories[activeInventoryId].name;
@@ -763,7 +787,12 @@
             document.getElementById('add-inventory-name').textContent = name;
         }
     }
-
+/**
+ * Cambia el inventario que está actualmente activo, lo persiste y fuerza la actualización de las vistas (tabla y valoración).
+ *
+ * @param {string} newId - La clave/ID del nuevo inventario activo.
+ * @returns {void}
+ */
     function updateInventorySelector() {
         const selector = document.getElementById('inventory-selector');
         selector.innerHTML = '';
@@ -800,7 +829,13 @@
             deleteSelector.value = '';
         }
     }
-
+/**
+ * Genera un ID de producto único y secuencial basado en una categoría dada.
+ * Utiliza un prefijo de 3 letras y encuentra el número secuencial más alto para esa categoría en el inventario actual.
+ *
+ * @param {string} category - La categoría del nuevo producto (Ej: "Tecnología", "Ropa").
+ * @returns {string} El nuevo ID generado, en formato Prefijo-XXX (Ej: "TEC-005").
+ */
     function changeActiveInventory(newId) {
         if (globalInventories[newId]) {
             activeInventoryId = newId;
@@ -813,6 +848,11 @@
     }
 
     // --- NUEVA FUNCIÓN PARA GENERAR ID AUTOMÁTICO ---
+    /**
+ * Punto de entrada de la aplicación. Controla la transición visual de la
+ * pantalla de bienvenida al formulario de login y llama a loadInventories.
+ * @returns {void}
+ */
     function generateNewProductId(category) {
         const inventory = getCurrentInventory();
         const normalizedCategory = category.trim();
@@ -900,7 +940,12 @@
     };
 
     // --- FUNCIONES DE NAVEGACIÓN Y LOGIN ---
-
+/**
+ * Maneja el envío del formulario de login. Verifica las credenciales (admin/123).
+ * Si es exitoso, muestra el layout principal y llama a renderizarTabla y calcularValoracion.
+ * @param {Event} e - Objeto de evento de envío del formulario.
+ * @returns {void}
+ */
     function iniciarApp() {
         // Simular un retardo en la bienvenida
         setTimeout(() => {
@@ -914,7 +959,11 @@
 
         loadInventories();
     }
-
+/**
+ * Cierra la sesión del usuario, oculta el layout principal y muestra la sección de login.
+ * También limpia los campos de usuario y contraseña.
+ * @returns {void}
+ */
     function login(e) {
         e.preventDefault();
         const username = document.getElementById('username').value;
@@ -934,7 +983,14 @@
             alert('Credenciales incorrectas. Intente de nuevo.');
         }
     }
-
+/**
+ * Controla la navegación: oculta todos los bloques de contenido y muestra la sección solicitada.
+ * Actualiza el título actual y el estado 'active' del elemento de la barra lateral.
+ *
+ * @param {string} sectionId - El ID de la sección a mostrar (Ej: 'inventario').
+ * @param {HTMLElement} element - El elemento del sidebar clickeado.
+ * @returns {void}
+ */
     function logout() {
         if (confirm('¿Está seguro que desea cerrar la sesión?')) {
             // Resetear la vista
@@ -945,7 +1001,11 @@
             loadInventories();
         }
     }
-
+/**
+ * Formatea un valor numérico al estándar de moneda Pesos Colombianos (COP) sin decimales.
+ * @param {number} number - El valor numérico a formatear.
+ * @returns {string} El valor formateado (Ej: "$ 1.500.000").
+ */
     function mostrarSeccion(sectionId, element) {
         // Ocultar todas las secciones de contenido
         Object.values(formContents).forEach(content => {
@@ -978,7 +1038,13 @@
     }
 
     // --- FUNCIONES DE GESTIÓN DE INVENTARIO ---
-
+/**
+ * Dibuja dinámicamente la tabla de inventario activo (#tabla-inventario).
+ * Implementa filtrado de búsqueda en el cliente y aplica el estilo 'stock-bajo' si la cantidad es crítica (<= 10).
+ * Asocia el evento de doble clic para abrir el modal de edición.
+ * @param {string} [filterText=''] - Texto opcional para filtrar los productos por múltiples campos.
+ * @returns {void}
+ */
     function formatCurrency(number) {
         if (typeof number !== 'number') return 'N/A';
         return new Intl.NumberFormat('es-CO', {
@@ -987,7 +1053,12 @@
             minimumFractionDigits: 0
         }).format(number);
     }
-
+/**
+ * Calcula la cantidad total de productos en stock y el valor monetario total (COP)
+ * del inventario activo y actualiza los elementos de la sección 'Valoración'.
+ *
+ * @returns {void}
+ */
     function renderizarTabla(filterText = '') {
         const inventory = getCurrentInventory();
         tablaBody.innerHTML = '';
@@ -1026,7 +1097,12 @@
             row.insertCell().textContent = producto.categoria;
         });
     }
-
+/**
+ * Rellena los campos del modal de edición (#edit-modal) con los datos del producto seleccionado y lo muestra.
+ * Guarda el ID del producto en 'currentEditProductId' para las operaciones de guardar/eliminar.
+ * @param {string} productId - El ID del producto a editar.
+ * @returns {void}
+ */
     function calcularValoracion() {
         const inventory = getCurrentInventory();
         let totalProductos = 0;
@@ -1040,7 +1116,12 @@
         totalProductosDisplay.textContent = totalProductos;
         valorTotalDisplay.textContent = formatCurrency(valorTotal);
     }
-
+/**
+ * Valida y guarda los cambios realizados en el producto desde el modal de edición.
+ * Actualiza el array de inventario, persiste los datos y refresca la UI (tabla/valoración).
+ *
+ * @returns {void}
+ */
     function abrirModalEdicion(productId) {
         const inventory = getCurrentInventory();
         const product = inventory.find(p => p.id === productId);
@@ -1062,7 +1143,12 @@
 
         editModal.style.display = 'block';
     }
-
+/**
+ * Elimina permanentemente el producto actualmente en edición ('currentEditProductId')
+ * del inventario activo, previa confirmación del usuario.
+ *
+ * @returns {void}
+ */
     function guardarProductoEditado() {
         const inventory = getCurrentInventory();
         const productIndex = inventory.findIndex(p => p.id === currentEditProductId);
@@ -1099,7 +1185,12 @@
         renderizarTabla();
         calcularValoracion();
     }
-
+/**
+ * Procesa el formulario para agregar un nuevo producto. Genera un ID único (generateNewProductId),
+ * valida los campos, y añade el producto al inventario activo.
+ * @param {Event} e - Objeto de evento del formulario.
+ * @returns {void}
+ */
     function eliminarProducto() {
         if (!confirm(`¿Está seguro de eliminar el producto con ID: ${currentEditProductId}? Esta acción no se puede deshacer.`)) {
             return;
@@ -1129,7 +1220,13 @@
     }
 
     // --- MANEJO DE FORMULARIOS ---
-
+/**
+ * Procesa el formulario y crea un nuevo inventario con el nombre y categorías proporcionados.
+ * Valida la unicidad del nombre, crea el objeto vacío, lo activa y persiste.
+ *
+ * @param {Event} e - Objeto de evento del formulario.
+ * @returns {void}
+ */
     function addNewProduct(e) {
         e.preventDefault();
 
@@ -1165,7 +1262,12 @@
         formAgregar.reset();
         alert(`Producto "${nombre}" (ID generado: ${id}) agregado al inventario activo.`);
     }
-
+/**
+ * Prepara y muestra el modal para la eliminación de inventarios.
+ * Muestra una alerta si solo queda un inventario, ya que no se puede eliminar el último.
+ *
+ * @returns {void}
+ */
     function createNewInventory(e) {
         e.preventDefault();
 
@@ -1202,7 +1304,10 @@
         // Regresar a la vista de agregar producto o inventario
         mostrarSeccion('agregar', document.querySelector('.sidebar-item[onclick*="agregar"]'));
     }
-
+/**
+ * Confirma y ejecuta la eliminación del inventario seleccionado en el modal.
+ * Impide la eliminación del inventario activo. Actualiza la persistencia y la UI.
+ *
     function abrirModalEliminarInventario() {
         updateInventorySelector(); // Asegura que el selector esté actualizado
         if (Object.keys(globalInventories).length <= 1) {
@@ -1211,7 +1316,12 @@
         }
         deleteInventoryModal.style.display = 'block';
     }
-
+/**
+ * Confirma y ejecuta la eliminación del inventario seleccionado en el modal.
+ * Impide la eliminación del inventario que está actualmente activo.
+ * Si la eliminación es exitosa, llama a saveInventories() y oculta el modal.
+ * @returns {void}
+ */
     function confirmDeleteInventory() {
         const idToDelete = deleteInventorySelect.value;
 
