@@ -8,6 +8,92 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
     <style>
+        /* --- ESTILOS AÑADIDOS PARA LA SECCIÓN "ACERCA DE" --- */
+        #acerca-content {
+            padding: 30px;
+            text-align: center;
+        }
+
+        .acerca-title { font-size: 2.2em; }
+        .acerca-subtitle { font-size: 1.6em; color: #333; border-bottom: none; padding-bottom: 10px; margin-top: 30px; text-align: left; }
+        .acerca-version, .acerca-slogan { font-size: 1.1em; color: #333; }
+        .acerca-slogan { font-style: italic; color: var(--color-secondary); font-weight: 500;}
+
+        /* Contenedor del Logo */
+        #acerca-logo-container {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px dashed #ccc;
+        }
+        #acerca-logo-img {
+            width: 130px; /* Nuevo tamaño */
+            height: 130px; /* Nuevo tamaño */
+            border-radius: 50%;
+            box-shadow: var(--shadow-light);
+            margin-bottom: 10px;
+        }
+
+        /* Contenedor de Desarrolladores */
+        #acerca-devs-container {
+            /* MANTENEMOS FLEX para centrar el grupo, PERO ahora cada tarjeta se comportará como una fila */
+            display: flex;
+            flex-direction: column; /* <-- CLAVE: Asegura que los elementos se apilen verticalmente */
+            align-items: center; /* CLAVE: Centra las tarjetas horizontalmente */
+            gap: 20px; /* Espacio vertical entre las tarjetas */
+            margin: 30px 0;
+            padding: 10px;
+        }
+
+        .dev-card {
+            background-color: #ffffff;
+            padding: 20px 25px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-deep);
+            width: 90%; /* Ajuste para que ocupe casi todo el ancho disponible del contenedor */
+            max-width: 400px; /* CLAVE: Define un ancho máximo para la tarjeta, pero se centrará */
+            text-align: center;
+            transition: transform 0.3s;
+            /* Usamos flex para ordenar el contenido dentro de la tarjeta verticalmente */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .dev-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .dev-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border: 4px solid var(--color-primary);
+        }
+
+        .dev-name {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin: 0;
+            color: var(--color-primary);
+        }
+
+        .dev-age {
+             font-size: 0.9em;
+             margin: 5px 0 10px 0;
+             color: #777;
+        }
+
+        .dev-role {
+            font-size: 0.85em;
+            color: #555;
+            margin: 5px 0 0 0;
+            padding-top: 5px;
+            border-top: 1px dashed #eee;
+        }
+        /* --- FIN ESTILOS "ACERCA DE" --- */
         :root {
             --color-primary: #1a73e8; /* Azul Google */
             --color-secondary: #0f9d58; /* Verde Google */
@@ -441,10 +527,10 @@
             <div id="agregar-content" class="form-content">
                 <h3>Agregar Producto al Inventario (<span id="add-inventory-name">Inventario Principal</span>)</h3>
                 <form id="form-agregar">
-                    <div class="form-group"><label>ID:</label><input id="add-id" placeholder="Ej: TEL-001" required></div>
+                    <p style="font-size: 0.9em; color: var(--color-primary);">El ID del producto se generará automáticamente según la categoría.</p>
                     <div class="form-group"><label>Nombre:</label><input id="add-nombre" placeholder="Nombre completo del producto" required></div>
                     <div class="form-group"><label>Detalle:</label><input id="add-detalle" placeholder="Ej: Talla M / Rojo, 512GB / Gris" required></div>
-                    <div class="form-group"><label>Categoría:</label><input id="add-categoria" placeholder="Ej: Tecnología, Ropa" required></div>
+                    <div class="form-group"><label>Categoría:</label><input id="add-categoria" placeholder="Ej: Tecnología, Ropa, Hogar" required></div>
                     <div class="form-group"><label>Cantidad:</label><input type="number" id="add-cantidad" min="1" value="1" required></div>
                     <div class="form-group"><label>Precio:</label><input type="number" id="add-precio" min="0" placeholder="Precio en COP (Ej: 1500000)" required></div>
                     <button class="btn-submit" type="submit" style="margin-top: 20px;">Guardar Producto</button>
@@ -452,15 +538,42 @@
             </div>
 
             <div id="acerca-content" class="form-content">
-                <h3>Acerca de SGI</h3>
-                <p><strong>Desarrolladores:</strong></p>
-                <ul>
-                    <li>Brayan Piraneque — **Scrum Master**</li>
-                    <li>Cristian Quiroga — **Product Owner**</li>
-                    <li>Alejandro Jaimes — **Developer Team**</li>
-                </ul>
-                <p><strong>Versión:</strong> 1.0</p>
-                <p><strong>Eslogan:</strong> "Organizamos inventarios, construimos eficiencia"</p>
+                <h3 class="acerca-title" style="color: var(--color-primary);">Acerca de SGI</h3>
+
+                <div id="acerca-logo-container">
+                    <img src="img.jpg" alt="Logo SGI" id="acerca-logo-img">
+                    <p class="acerca-slogan">"Organizamos inventarios, construimos eficiencia"</p>
+                </div>
+
+                <div id="acerca-devs-container">
+                    <h4 class="acerca-subtitle">Desarrolladores del Proyecto:</h4>
+
+                    <div class="dev-card">
+                        <img src="brayan.jpg" alt="Foto de Brayan" class="dev-photo">
+                        <p class="dev-name">Brayan Stiven Piraneque Balaguera</p>
+                        <p class="dev-edad">Edad: 21</p>
+                        <p class="dev-contacto">Contacto: 310-208-3705</p>
+                        <p class="dev-role">Scrum Master/Developer Teams</p>
+                    </div>
+
+                    <div class="dev-card">
+                        <img src="cristian.jpg" alt="Foto de Cristian" class="dev-photo">
+                        <p class="dev-name">Cristian Steven Quiroga Alfonso</p>
+                        <p class="dev-edad">Edad: 22</p>
+                        <p class="dev-contacto">Contacto: 322-805-9671</p>
+                        <p class="dev-role">Product Owner/Developer Teams</p>
+                    </div>
+
+                    <div class="dev-card">
+                        <img src="alejandro.jpg" alt="Foto de Alejandro" class="dev-photo">
+                        <p class="dev-name">Diego Alejandro Fonseca Jaimes</p>
+                        <p class="dev-edad">Edad: 18</p>
+                        <p class="dev-contacto">Contacto: 312-472-8773</p>
+                        <p class="dev-role">Developer Teams</p>
+                    </div>
+                </div>
+
+                <p class="acerca-version"><strong>Versión:</strong> 2.2.3</p>
             </div>
 
         </div> </div> </div>
@@ -471,7 +584,6 @@
         <h3 id="modal-product-name" style="color:var(--color-primary);">Detalles del Producto</h3>
         <p>ID: <strong id="modal-product-id"></strong></p>
 
-        <!-- Añadimos campos editables dentro del modal (nombre, detalle, categoría, precio, cantidad) -->
         <div style="border-top: 1px solid #eee; padding-top: 15px; margin-top: 15px;">
             <div class="form-row">
                 <label>Nombre:</label>
@@ -530,6 +642,13 @@
     const INVENTORY_STORAGE_KEY = 'sgi_multiple_inventarios';
     const ACTIVE_INVENTORY_KEY = 'sgi_inventario_activo';
     const PRODUCT_COUNT_TARGET = 100;
+
+    // Prefijos para la generación automática de ID
+    const categoryPrefixes = {
+        'Tecnología': 'TEC',
+        'Ropa': 'ROP',
+        'Hogar': 'HOG',
+    };
 
     let globalInventories = {};
     let activeInventoryId = 'Inventario Principal';
@@ -648,6 +767,9 @@
     function updateInventorySelector() {
         const selector = document.getElementById('inventory-selector');
         selector.innerHTML = '';
+        const deleteSelector = document.getElementById('delete-inventory-select');
+        deleteSelector.innerHTML = '';
+
         const keys = Object.keys(globalInventories);
 
         keys.forEach(key => {
@@ -658,7 +780,25 @@
                 option.selected = true;
             }
             selector.appendChild(option);
+
+            // Añadir al selector de eliminación, excluyendo el activo si es el único
+            if (keys.length > 1 || key !== activeInventoryId) {
+                 const deleteOption = document.createElement('option');
+                 deleteOption.value = key;
+                 deleteOption.textContent = globalInventories[key].name;
+                 deleteSelector.appendChild(deleteOption);
+            }
         });
+
+        // Deshabilitar la opción de eliminar si solo queda un inventario
+        if (keys.length <= 1) {
+            const onlyOption = document.createElement('option');
+            onlyOption.value = '';
+            onlyOption.textContent = 'No se puede eliminar el último inventario';
+            onlyOption.disabled = true;
+            deleteSelector.appendChild(onlyOption);
+            deleteSelector.value = '';
+        }
     }
 
     function changeActiveInventory(newId) {
@@ -666,10 +806,49 @@
             activeInventoryId = newId;
             saveInventories();
             renderizarTabla();
-            mostrarSeccion('inventario', document.querySelector('.sidebar-item[onclick*="inventario"]'));
-            // alert(`Inventario cambiado a: ${globalInventories[newId].name}`);
+            calcularValoracion();
+            mostrarSeccion(document.querySelector('.form-content[style*="display:block"]').id.replace('-content', ''), document.querySelector('.sidebar-item.active'));
+            alert(`Inventario cambiado a: ${globalInventories[newId].name}`);
         }
     }
+
+    // --- NUEVA FUNCIÓN PARA GENERAR ID AUTOMÁTICO ---
+    function generateNewProductId(category) {
+        const inventory = getCurrentInventory();
+        const normalizedCategory = category.trim();
+
+        // 1. Determinar el prefijo (usa las 3 primeras letras de la categoría si no hay prefijo predefinido)
+        let prefix = categoryPrefixes[normalizedCategory] || normalizedCategory.substring(0, 3).toUpperCase();
+
+        // Limpiar el prefijo (solo letras y números)
+        prefix = prefix.replace(/[^A-Z0-9]/g, '').toUpperCase();
+        if (prefix.length === 0) prefix = 'PRO'; // Fallback
+
+        let maxNumber = 0;
+
+        // Regex para encontrar IDs que coincidan con el patrón (ej: TEC-001)
+        const idRegex = new RegExp(`^${prefix}-(\\d+)$`);
+
+        // 2. Encontrar el número secuencial más alto
+        inventory.forEach(p => {
+            const match = p.id.match(idRegex);
+            if (match) {
+                const currentNumber = parseInt(match[1]);
+                if (currentNumber > maxNumber) {
+                    maxNumber = currentNumber;
+                }
+            }
+        });
+
+        // 3. Generar el nuevo ID
+        const newNumber = maxNumber + 1;
+        // Rellenar con ceros a la izquierda (ej: 1 -> 001)
+        const paddedNumber = String(newNumber).padStart(3, '0');
+
+        return `${prefix}-${paddedNumber}`;
+    }
+    // --- FIN NUEVA FUNCIÓN ---
+
 
     const bienvenidaSection = document.getElementById('bienvenida');
     const loginSection = document.getElementById('login-section');
@@ -687,7 +866,6 @@
     const editModal = document.getElementById('edit-modal');
     const modalProductName = document.getElementById('modal-product-name');
     const modalProductId = document.getElementById('modal-product-id');
-    const modalProductDetail = document.getElementById('modal-product-detail'); // not used visually now but left for compatibility
     const modalNameInput = document.getElementById('modal-name-input');
     const modalDetailInput = document.getElementById('modal-detail-input');
     const modalCategoryInput = document.getElementById('modal-category-input');
@@ -715,71 +893,94 @@
     const titles = {
         'home': 'Página Principal',
         'inventario': 'Gestión de Inventario',
-        'valoracion': 'Valoración Económica',
-        'nuevo-inventario': 'Configuración de Nuevo Inventario',
-        'agregar': 'Añadir Nuevo Artículo',
-        'acerca': 'Información del Proyecto'
+        'valoracion': 'Reporte de Valoración',
+        'nuevo-inventario': 'Crear Nuevo Inventario',
+        'agregar': 'Añadir Nuevo Producto',
+        'acerca': 'Información del Sistema'
     };
 
+    // --- FUNCIONES DE NAVEGACIÓN Y LOGIN ---
 
-    document.addEventListener('DOMContentLoaded', () => {
-        loadInventories();
-        renderizarTabla();
-
-        setTimeout(() => bienvenidaSection.classList.add('hidden-section'), 2000);
+    function iniciarApp() {
+        // Simular un retardo en la bienvenida
         setTimeout(() => {
-            bienvenidaSection.style.display = 'none';
-            loginSection.style.opacity = '1';
+            bienvenidaSection.style.opacity = 0;
+            bienvenidaSection.style.visibility = 'hidden';
+
+            loginSection.style.opacity = 1;
             loginSection.style.visibility = 'visible';
-        }, 2500);
 
-        // Listeners del modal
-        if (btnSaveProduct) btnSaveProduct.addEventListener('click', saveProductFromModal);
-        if (btnDeleteProduct) btnDeleteProduct.addEventListener('click', deleteProductFromModal);
+        }, 1500);
 
-        modalQuantityInput.addEventListener('input', () => {
-            modalQuantityInput.value = Math.max(0, parseInt(modalQuantityInput.value) || 0);
-        });
+        loadInventories();
+    }
 
-        if (searchInput) {
-            searchInput.addEventListener('input', filterInventory);
-        }
-    });
-
-    loginForm.addEventListener('submit', (e) => {
+    function login(e) {
         e.preventDefault();
-        const u = document.getElementById('username').value;
-        const p = document.getElementById('password').value;
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
 
-        if (u === VALID_USER && p === VALID_PASS) {
-            // Login exitoso
-            loginSection.style.opacity = '0';
-            setTimeout(() => {
-                loginSection.style.display = 'none';
-                mainLayout.style.display = 'flex';
-                // Asegurar que el inventario activo se muestre correctamente al entrar
-                mostrarSeccion('home', document.querySelector('.sidebar-item[onclick*="home"]'));
-                renderizarTabla();
-            }, 500);
+        if (username === VALID_USER && password === VALID_PASS) {
+            // Ocultar login y mostrar layout principal
+            loginSection.style.display = 'none';
+            mainLayout.style.display = 'flex';
+
+            // Inicializar vistas con los datos cargados
+            renderizarTabla();
+            calcularValoracion();
+            mostrarSeccion('home', document.querySelector('.sidebar-item.active'));
+
         } else {
             alert('Credenciales incorrectas. Intente de nuevo.');
         }
-    });
-
-    function logout() {
-        // Opcional: limpiar datos de sesión si existieran
-        // sessionStorage.removeItem('isLoggedIn');
-        alert('Sesión cerrada. Volviendo a la pantalla de login.');
-        mainLayout.style.display = 'none';
-        loginSection.style.display = 'flex';
-        setTimeout(() => loginSection.style.opacity = '1', 10);
-        // Resetear el formulario de login
-        loginForm.reset();
-        document.getElementById('username').focus();
     }
 
-    // Función para formatear a COP (Pesos Colombianos)
-    function formatCOP(number) {
+    function logout() {
+        if (confirm('¿Está seguro que desea cerrar la sesión?')) {
+            // Resetear la vista
+            mainLayout.style.display = 'none';
+            loginSection.style.display = 'flex';
+            document.getElementById('password').value = ''; // Limpiar campo de contraseña
+            document.getElementById('username').value = '';
+            loadInventories();
+        }
+    }
+
+    function mostrarSeccion(sectionId, element) {
+        // Ocultar todas las secciones de contenido
+        Object.values(formContents).forEach(content => {
+            content.style.display = 'none';
+        });
+
+        // Mostrar la sección solicitada
+        const targetContent = formContents[sectionId];
+        if (targetContent) {
+            targetContent.style.display = 'block';
+            currentTitle.textContent = titles[sectionId];
+        }
+
+        // Remover 'active' de todos los elementos del sidebar
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.classList.remove('active');
+        });
+
+        // Añadir 'active' al elemento clickeado
+        if (element) {
+            element.classList.add('active');
+        }
+
+        // Acciones específicas al cambiar de sección
+        if (sectionId === 'inventario') {
+            renderizarTabla();
+        } else if (sectionId === 'valoracion') {
+            calcularValoracion();
+        }
+    }
+
+    // --- FUNCIONES DE GESTIÓN DE INVENTARIO ---
+
+    function formatCurrency(number) {
+        if (typeof number !== 'number') return 'N/A';
         return new Intl.NumberFormat('es-CO', {
             style: 'currency',
             currency: 'COP',
@@ -787,295 +988,281 @@
         }).format(number);
     }
 
-    // --- Funciones de la Interfaz ---
-
-    function mostrarSeccion(id, element) {
-        // Ocultar todas las secciones de contenido
-        Object.values(formContents).forEach(content => {
-            content.style.display = 'none';
-        });
-
-        // Mostrar la sección solicitada
-        const targetSection = formContents[id];
-        if (targetSection) {
-            targetSection.style.display = 'block';
-            currentTitle.textContent = titles[id] || 'SGI';
-
-            // Actualizar clase activa del sidebar
-            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
-            if (element) {
-                element.classList.add('active');
-            }
-
-            // Acciones específicas al cambiar de sección
-            if (id === 'inventario') {
-                renderizarTabla();
-            } else if (id === 'valoracion') {
-                calcularValoracion();
-            }
-        }
-    }
-
-    // --- Funciones de Gestión de Inventario (CRUD) ---
-
     function renderizarTabla(filterText = '') {
-        const inventario = getCurrentInventory();
+        const inventory = getCurrentInventory();
         tablaBody.innerHTML = '';
-        const filterLower = filterText.toLowerCase().trim();
-        let productosFiltrados = inventario;
+        const filterLower = filterText.toLowerCase();
 
-        if (filterLower) {
-            productosFiltrados = inventario.filter(p =>
-                p.id.toLowerCase().includes(filterLower) ||
-                p.nombre.toLowerCase().includes(filterLower) ||
-                p.detalle.toLowerCase().includes(filterLower) ||
-                p.categoria.toLowerCase().includes(filterLower)
-            );
-        }
+        const filteredInventory = inventory.filter(p =>
+            p.id.toLowerCase().includes(filterLower) ||
+            p.nombre.toLowerCase().includes(filterLower) ||
+            p.detalle.toLowerCase().includes(filterLower) ||
+            p.categoria.toLowerCase().includes(filterLower)
+        );
 
-        productosFiltrados.forEach(producto => {
+        filteredInventory.forEach(producto => {
             const row = tablaBody.insertRow();
-            // Resaltar stock bajo
+
+            // Atributo para identificar el producto al hacer doble clic
+            row.ondblclick = () => abrirModalEdicion(producto.id);
+
+            // Aplicar estilo de advertencia de stock
             if (producto.cantidad <= STOCK_WARNING_LEVEL) {
                 row.classList.add('stock-bajo');
             }
 
-            row.insertCell(0).textContent = producto.id;
-            row.insertCell(1).textContent = producto.nombre;
-            row.insertCell(2).textContent = producto.detalle;
-            row.insertCell(3).textContent = producto.cantidad;
-            row.insertCell(4).textContent = formatCOP(producto.precio);
-            row.insertCell(5).textContent = producto.categoria;
+            row.insertCell().textContent = producto.id;
+            row.insertCell().textContent = producto.nombre;
+            row.insertCell().textContent = producto.detalle;
 
-            // Añadir evento de doble clic para editar/eliminar
-            row.addEventListener('dblclick', () => openEditModal(producto.id));
+            const cellCantidad = row.insertCell();
+            cellCantidad.textContent = producto.cantidad;
+            if (producto.cantidad <= STOCK_WARNING_LEVEL) {
+                 // Puedes añadir un icono para más visibilidad
+                 cellCantidad.innerHTML = `<span class="material-symbols-outlined" style="font-size: 1.2em; vertical-align: middle; color: ${getComputedStyle(document.documentElement).getPropertyValue('--color-red')}">warning</span> ${producto.cantidad}`;
+            }
+
+            row.insertCell().textContent = formatCurrency(producto.precio);
+            row.insertCell().textContent = producto.categoria;
         });
     }
 
-    function filterInventory() {
-        const filterText = searchInput.value;
-        renderizarTabla(filterText);
+    function calcularValoracion() {
+        const inventory = getCurrentInventory();
+        let totalProductos = 0;
+        let valorTotal = 0;
+
+        inventory.forEach(p => {
+            totalProductos += p.cantidad;
+            valorTotal += p.cantidad * p.precio;
+        });
+
+        totalProductosDisplay.textContent = totalProductos;
+        valorTotalDisplay.textContent = formatCurrency(valorTotal);
     }
 
-    function openEditModal(productId) {
-        const producto = getCurrentInventory().find(p => p.id === productId);
-        if (!producto) {
+    function abrirModalEdicion(productId) {
+        const inventory = getCurrentInventory();
+        const product = inventory.find(p => p.id === productId);
+
+        if (!product) {
             alert('Producto no encontrado.');
             return;
         }
 
-        currentEditProductId = productId;
-        modalProductName.textContent = producto.nombre || '';
-        modalProductId.textContent = producto.id || '';
+        currentEditProductId = productId; // Guardar el ID para la edición
 
-        // llenar inputs del modal
-        modalNameInput.value = producto.nombre || '';
-        modalDetailInput.value = producto.detalle || '';
-        modalCategoryInput.value = producto.categoria || '';
-        modalPriceInput.value = producto.precio !== undefined ? producto.precio : '';
-        modalQuantityInput.value = producto.cantidad !== undefined ? producto.cantidad : 0;
+        modalProductName.textContent = product.nombre;
+        modalProductId.textContent = product.id;
+        modalNameInput.value = product.nombre;
+        modalDetailInput.value = product.detalle;
+        modalCategoryInput.value = product.categoria;
+        modalPriceInput.value = product.precio;
+        modalQuantityInput.value = product.cantidad;
 
         editModal.style.display = 'block';
     }
 
-    // Guardar edición completa desde el modal
-    function saveProductFromModal() {
-        const newNombre = modalNameInput.value.trim();
-        const newDetalle = modalDetailInput.value.trim();
-        const newCategoria = modalCategoryInput.value.trim();
-        const newPrecio = parseFloat(modalPriceInput.value);
-        const newCantidad = parseInt(modalQuantityInput.value);
+    function guardarProductoEditado() {
+        const inventory = getCurrentInventory();
+        const productIndex = inventory.findIndex(p => p.id === currentEditProductId);
 
-        // validaciones básicas
-        if (!newNombre) {
-            alert('El nombre no puede quedar vacío.');
-            return;
-        }
-        if (isNaN(newPrecio) || newPrecio < 0) {
-            alert('Precio inválido.');
-            return;
-        }
-        if (isNaN(newCantidad) || newCantidad < 0) {
-            alert('Cantidad inválida.');
+        if (productIndex === -1) {
+            alert('Error: Producto no encontrado para guardar.');
             return;
         }
 
-        const inventario = globalInventories[activeInventoryId].products;
-        const index = inventario.findIndex(p => p.id === currentEditProductId);
+        // Obtener y validar nuevos valores
+        const newName = modalNameInput.value.trim();
+        const newDetail = modalDetailInput.value.trim();
+        const newCategory = modalCategoryInput.value.trim();
+        const newPrice = parseFloat(modalPriceInput.value);
+        const newQuantity = parseInt(modalQuantityInput.value);
 
-        if (index > -1) {
-            inventario[index].nombre = newNombre;
-            inventario[index].detalle = newDetalle;
-            inventario[index].categoria = newCategoria;
-            inventario[index].precio = newPrecio;
-            inventario[index].cantidad = newCantidad;
-
-            saveInventories();
-            renderizarTabla(searchInput.value);
-            editModal.style.display = 'none';
-            alert(`Producto ${inventario[index].id} actualizado correctamente.`);
-        } else {
-            alert('Error: producto no encontrado al intentar guardar.');
+        if (newName === "" || newDetail === "" || newCategory === "" || isNaN(newPrice) || newPrice < 0 || isNaN(newQuantity) || newQuantity < 0) {
+             alert("Por favor, complete todos los campos y asegúrese de que el precio y la cantidad son números válidos y no negativos.");
+             return;
         }
+
+        // Aplicar los cambios
+        inventory[productIndex].nombre = newName;
+        inventory[productIndex].detalle = newDetail;
+        inventory[productIndex].categoria = newCategory;
+        inventory[productIndex].precio = newPrice;
+        inventory[productIndex].cantidad = newQuantity;
+
+        // Persistir los datos
+        saveInventories();
+
+        alert(`Producto ${currentEditProductId} actualizado con éxito.`);
+        editModal.style.display = 'none';
+        renderizarTabla();
+        calcularValoracion();
     }
 
-    function deleteProductFromModal() {
-        if (!confirm(`¿Está seguro de que desea ELIMINAR el producto ${currentEditProductId} del inventario?`)) {
+    function eliminarProducto() {
+        if (!confirm(`¿Está seguro de eliminar el producto con ID: ${currentEditProductId}? Esta acción no se puede deshacer.`)) {
             return;
         }
 
-        const inventario = globalInventories[activeInventoryId].products;
-        const initialLength = inventario.length;
+        let inventory = getCurrentInventory();
+        const initialLength = inventory.length;
 
-        // Filtrar para crear un nuevo array sin el producto a eliminar
-        globalInventories[activeInventoryId].products = inventario.filter(p => p.id !== currentEditProductId);
+        // Filtrar para crear un nuevo array sin el producto
+        const newInventory = inventory.filter(p => p.id !== currentEditProductId);
 
-        if (globalInventories[activeInventoryId].products.length < initialLength) {
-            saveInventories();
-            renderizarTabla(searchInput.value);
-            editModal.style.display = 'none';
-            alert(`Producto ${currentEditProductId} eliminado correctamente.`);
-        } else {
-            alert('Error al intentar eliminar el producto.');
+        if (newInventory.length === initialLength) {
+            alert('Error al eliminar el producto. ID no encontrado.');
+            return;
         }
+
+        // Actualizar el inventario activo
+        globalInventories[activeInventoryId].products = newInventory;
+
+        // Persistir los datos
+        saveInventories();
+
+        alert(`Producto ${currentEditProductId} eliminado con éxito.`);
+        editModal.style.display = 'none';
+        renderizarTabla();
+        calcularValoracion();
     }
 
-    function calcularValoracion() {
-        const inventario = getCurrentInventory();
-        let totalUnicos = inventario.length;
-        let valorTotal = 0;
+    // --- MANEJO DE FORMULARIOS ---
 
-        inventario.forEach(producto => {
-            valorTotal += (producto.cantidad * producto.precio);
-        });
-
-        totalProductosDisplay.textContent = totalUnicos;
-        valorTotalDisplay.textContent = formatCOP(valorTotal);
-    }
-
-    // --- Gestión de Formularios ---
-
-    formAgregar.addEventListener('submit', (e) => {
+    function addNewProduct(e) {
         e.preventDefault();
 
-        const id = document.getElementById('add-id').value.trim();
+        // Removimos la lectura del ID y usamos la nueva función de generación
         const nombre = document.getElementById('add-nombre').value.trim();
         const detalle = document.getElementById('add-detalle').value.trim();
         const categoria = document.getElementById('add-categoria').value.trim();
         const cantidad = parseInt(document.getElementById('add-cantidad').value);
         const precio = parseFloat(document.getElementById('add-precio').value);
 
-        if (getCurrentInventory().some(p => p.id === id)) {
-            alert(`Error: Ya existe un producto con el ID "${id}" en este inventario.`);
+        // Validación de campos antes de generar ID
+        if (nombre === "" || detalle === "" || categoria === "") {
+             alert("Por favor, complete todos los campos de texto.");
+             return;
+        }
+        if (cantidad <= 0 || precio < 0 || isNaN(cantidad) || isNaN(precio)) {
+            alert("La cantidad debe ser un número positivo y el precio debe ser cero o positivo.");
             return;
         }
 
-        if (isNaN(cantidad) || cantidad <= 0) {
-            alert('La cantidad debe ser un número positivo.');
-            return;
-        }
+        // Generar el ID
+        const id = generateNewProductId(categoria);
 
-        if (isNaN(precio) || precio < 0) {
-            alert('El precio debe ser un número positivo o cero.');
-            return;
-        }
+        const inventory = getCurrentInventory();
 
-        const nuevoProducto = {
-            id: id,
-            nombre: nombre,
-            detalle: detalle,
-            categoria: categoria,
-            cantidad: cantidad,
-            precio: precio
-        };
+        const nuevoProducto = { id, nombre, detalle, categoria, cantidad, precio };
+        inventory.push(nuevoProducto);
 
-        globalInventories[activeInventoryId].products.push(nuevoProducto);
+        // Persistir y actualizar
         saveInventories();
+
+        // Limpiar formulario y notificar
         formAgregar.reset();
-        alert(`Producto "${nombre}" agregado al inventario.`);
-        mostrarSeccion('inventario', document.querySelector('.sidebar-item[onclick*="inventario"]')); // Muestra la tabla
+        alert(`Producto "${nombre}" (ID generado: ${id}) agregado al inventario activo.`);
+    }
 
-    });
-
-    formNuevoInventario.addEventListener('submit', (e) => {
+    function createNewInventory(e) {
         e.preventDefault();
 
-        const newName = document.getElementById('new-inventory-name').value.trim();
-        const categoryString = document.getElementById('new-inventory-categories').value.trim();
-        const categories = categoryString.split(',').map(c => c.trim()).filter(c => c.length > 0);
+        const name = document.getElementById('new-inventory-name').value.trim();
+        const categoriesText = document.getElementById('new-inventory-categories').value.trim();
+        const categories = categoriesText.split(',').map(c => c.trim()).filter(c => c.length > 0);
 
-        if (globalInventories[newName]) {
-            alert(`Error: El nombre de inventario "${newName}" ya existe.`);
+        if (globalInventories[name]) {
+            alert(`Error: Ya existe un inventario con el nombre "${name}". Por favor, elija otro nombre.`);
             return;
         }
-
         if (categories.length === 0) {
-             alert('Debe definir al menos una categoría.');
-            return;
+             alert('Debe definir al menos una categoría para el nuevo inventario.');
+             return;
         }
 
-        globalInventories[newName] = {
-            name: newName,
+        // Crear el nuevo inventario
+        globalInventories[name] = {
+            name: name,
             categories: categories,
-            products: []
+            products: [] // Empieza vacío
         };
 
-        activeInventoryId = newName;
+        // Activarlo inmediatamente
+        activeInventoryId = name;
+
+        // Persistir y actualizar la interfaz
         saveInventories();
+
+        // Limpiar formulario y notificar
         formNuevoInventario.reset();
-        alert(`Inventario "${newName}" creado y activado exitosamente.`);
-        mostrarSeccion('home', document.querySelector('.sidebar-item[onclick*="home"]'));
-    });
+        alert(`Inventario "${name}" creado y activado con éxito. Categorías: ${categories.join(', ')}`);
+
+        // Regresar a la vista de agregar producto o inventario
+        mostrarSeccion('agregar', document.querySelector('.sidebar-item[onclick*="agregar"]'));
+    }
 
     function abrirModalEliminarInventario() {
-        // Limpiar y llenar el selector con todos los inventarios, excluyendo el activo (si es el único)
-        deleteInventorySelect.innerHTML = '';
-        const keys = Object.keys(globalInventories);
-
-        if (keys.length === 0) {
-            alert("No hay inventarios para eliminar.");
+        updateInventorySelector(); // Asegura que el selector esté actualizado
+        if (Object.keys(globalInventories).length <= 1) {
+            alert('No puede eliminar el último inventario. Cree uno nuevo para poder eliminar este.');
             return;
         }
-
-        // Si solo queda un inventario, no se permite eliminarlo
-        if (keys.length === 1) {
-            alert(`No puede eliminar el único inventario restante: ${globalInventories[keys[0]].name}`);
-            return;
-        }
-
-        keys.forEach(key => {
-            const option = document.createElement('option');
-            option.value = key;
-            option.textContent = globalInventories[key].name;
-            deleteInventorySelect.appendChild(option);
-        });
-
         deleteInventoryModal.style.display = 'block';
     }
 
     function confirmDeleteInventory() {
-        const inventoryToDeleteId = deleteInventorySelect.value;
-        if (!inventoryToDeleteId) {
-            alert("Seleccione un inventario.");
+        const idToDelete = deleteInventorySelect.value;
+
+        if (!idToDelete) {
+             alert('Por favor, seleccione un inventario para eliminar.');
+             return;
+        }
+
+        if (idToDelete === activeInventoryId) {
+            alert('Error: No puede eliminar el inventario que está actualmente activo. Por favor, cambie a otro inventario y vuelva a intentarlo.');
             return;
         }
 
-        if (inventoryToDeleteId === activeInventoryId) {
-            alert("No puede eliminar el inventario que está actualmente activo. Por favor, cambie el inventario activo antes de eliminar.");
-            return;
-        }
+        if (confirm(`ATENCIÓN: ¿Está seguro de eliminar el inventario "${globalInventories[idToDelete].name}"? Todos los datos se perderán permanentemente.`)) {
 
-        if (confirm(`¿Está ABSOLUTAMENTE seguro de que desea eliminar PERMANENTEMENTE el inventario "${globalInventories[inventoryToDeleteId].name}"?`)) {
-            delete globalInventories[inventoryToDeleteId];
-            saveInventories(); // Esto actualizará el selector
+            // Eliminar del objeto global
+            delete globalInventories[idToDelete];
+
+            // Persistir los datos (el inventario activo se mantiene igual o se reasigna si era el eliminado)
+            saveInventories();
+
+            alert(`Inventario "${idToDelete}" eliminado con éxito.`);
             deleteInventoryModal.style.display = 'none';
-            alert(`Inventario "${inventoryToDeleteId}" eliminado con éxito.`);
-
-            // Reabrir el modal con la lista actualizada si es necesario, o volver a Home
-            mostrarSeccion('home', document.querySelector('.sidebar-item[onclick*="home"]'));
         }
     }
 
+
+    // --- LISTENERS (ASOCIACIÓN DE EVENTOS) ---
+
+    // Login
+    loginForm.addEventListener('submit', login);
+
+    // Agregar Producto
+    formAgregar.addEventListener('submit', addNewProduct);
+
+    // Crear Nuevo Inventario
+    formNuevoInventario.addEventListener('submit', createNewInventory);
+
+    // Buscar Producto
+    searchInput.addEventListener('input', (e) => {
+        renderizarTabla(e.target.value);
+    });
+
+    // Guardar Edición de Producto
+    btnSaveProduct.addEventListener('click', guardarProductoEditado);
+
+    // Eliminar Producto
+    btnDeleteProduct.addEventListener('click', eliminarProducto);
+
+    // Iniciar la aplicación al cargar
+    document.addEventListener('DOMContentLoaded', iniciarApp);
 
 </script>
 </body>
